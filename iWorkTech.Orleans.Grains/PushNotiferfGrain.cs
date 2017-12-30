@@ -19,13 +19,14 @@ namespace iWorkTech.Orleans.Grains
 
         private readonly List<VelocityMessage> _messageQueue = new List<VelocityMessage>();
 
-        public Task SendMessage(VelocityMessage message)
+        public async Task SendMessage(VelocityMessage message)
         {
+            Console.WriteLine("Device ID:{0} Lat:{1} Lon: {2}", message.DeviceId, message.Latitude,
+                message.Longitude);
             // add a message to the send queue
             _messageQueue.Add(message);
             if (_messageQueue.Count > 25)
-                Flush();
-            return Task.CompletedTask;
+                await Flush();
         }
 
         public override async Task OnActivateAsync()
@@ -35,15 +36,14 @@ namespace iWorkTech.Orleans.Grains
 
             // not in azure, the SignalR hub is running locally
             //await AddHub("http://localhost:60361/");
-            await AddHub("https://localhost:44358/location");
+            //await AddHub("https://localhost:44358/location");
 
             await base.OnActivateAsync();
         }
 
-        private Task FlushQueue(object _)
+        private async Task FlushQueue(object _)
         {
-            Flush();
-            return Task.CompletedTask;
+            //await Flush();
         }
 
         private async Task AddHub(string address)
@@ -53,12 +53,12 @@ namespace iWorkTech.Orleans.Grains
                 .WithConsoleLogger()
                 .Build();
 
-            connection.On<string>("Message", data => { Console.WriteLine($"Received: {data}"); });
+            connection.On<string>("locationUpdate", data => { Console.WriteLine($"Received: {data}"); });
 
             await connection.StartAsync();
         }
 
-        private void Flush()
+        private async Task Flush()
         {
             if (_messageQueue.Count == 0) return;
 
@@ -66,14 +66,11 @@ namespace iWorkTech.Orleans.Grains
             var messagesToSend = _messageQueue.ToArray();
             _messageQueue.Clear();
 
-            var promises = new List<Task>();
+            //var promises = new List<Task>();
             foreach (var hub in _hubs.Values)
                 try
                 {
-                    //if (hub.Item1.StartAsync() == ConnectionState.Connecting)
-                    //    hub.Item2.Invoke("LocationUpdates", new VelocityBatch {Messages = messagesToSend});
-                    //else
-                    //    hub.Item1.Start();
+                    await hub.Item1.InvokeAsync("locationUpdates", new VelocityBatch {Messages = messagesToSend});
                 }
                 catch (Exception ex)
                 {

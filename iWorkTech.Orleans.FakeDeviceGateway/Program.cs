@@ -25,8 +25,6 @@ namespace iWorkTech.Orleans.FakeDeviceGateway
 
         private static async Task SendMessage(IClusterClient client, Model model)
         {
-            Console.WriteLine("Lat: {0} :: Lon :{1}", model.Lat, model.Lon);
-
             // simulate the device moving
             model.Speed += _rand.NextDouble(-0.0001, 0.0001);
             model.Direction += _rand.NextDouble(-0.001, 0.001);
@@ -45,6 +43,7 @@ namespace iWorkTech.Orleans.FakeDeviceGateway
 
             // send the mesage to Orleans
             var device = client.GetGrain<IDeviceGrain>(model.DeviceId);
+            Console.WriteLine("Lat: {0} :: Lon :{1}", model.Lat, model.Lon);
             await device.ProcessMessage(new DeviceMessage(model.Lat, model.Lon, _counter, model.DeviceId,
                 DateTime.UtcNow));
             Interlocked.Increment(ref _counter);
@@ -139,12 +138,12 @@ namespace iWorkTech.Orleans.FakeDeviceGateway
             // create a thread for each device, and continually move it's position
             foreach (var model in devices)
             {
-                var ts = new ThreadStart(() =>
+                var ts = new ThreadStart(async () =>
                 {
                     while (true)
                         try
                         {
-                            SendMessage(client, model).Wait();
+                            await SendMessage(client, model);
                             Thread.Sleep(_rand.Next(500, 2500));
                         }
                         catch (Exception ex)
