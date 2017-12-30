@@ -35,7 +35,7 @@ namespace iWorkTech.Orleans.Grains
 
             // not in azure, the SignalR hub is running locally
             //await AddHub("http://localhost:60361/");
-            await AddHub("https://localhost:44358/");
+            await AddHub("https://localhost:44358/location");
 
             await base.OnActivateAsync();
         }
