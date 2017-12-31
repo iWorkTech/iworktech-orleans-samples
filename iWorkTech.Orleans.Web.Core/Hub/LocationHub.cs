@@ -12,13 +12,13 @@ namespace iWorkTech.Orleans.Web.Core.Hub
         public async Task LocationUpdate(VelocityMessage message)
         {
             // Forward a single messages to all browsers
-            await Clients.All.InvokeAsync("locationUpdate", message);
+            await Clients.All.InvokeAsync("LocationUpdate", message);
         }
 
         public async Task LocationUpdates(VelocityBatch messages)
         {
             // Forward a batch of messages to all browsers
-            await Clients.All.InvokeAsync("locationUpdates", messages);
+            await Clients.All.InvokeAsync("LocationUpdates", messages);
         }
     }
 }
