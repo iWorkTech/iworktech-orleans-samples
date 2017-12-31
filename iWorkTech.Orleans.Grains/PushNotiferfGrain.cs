@@ -35,7 +35,7 @@ namespace iWorkTech.Orleans.Grains
             RegisterTimer(FlushQueue, null, TimeSpan.FromMilliseconds(100), TimeSpan.FromMilliseconds(100));
 
             // not in azure, the SignalR hub is running locally
-            //await AddHub("http://localhost:60361/");
+            await AddHub("http://localhost:60299/location");
             //await AddHub("https://localhost:44358/location");
 
             await base.OnActivateAsync();
@@ -43,7 +43,7 @@ namespace iWorkTech.Orleans.Grains
 
         private async Task FlushQueue(object _)
         {
-            //await Flush();
+            await Flush();
         }
 
         private async Task AddHub(string address)

@@ -32,6 +32,7 @@ namespace iWorkTech.Orleans.Web.Core
                 app.UseSignalR(routes =>
                 {
                     routes.MapHub<LocationHub>("location");
+                    routes.MapHub<ChatHub>("chat");
                 });
             }
             else

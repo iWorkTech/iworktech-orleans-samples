@@ -77,59 +77,6 @@
 
 @RenderSection("Scripts", false)
 
-<script>
-    var map;
-    var devices = [];
 
-    var mapOptions = {
-        credentials: "ApbjPIO75uChAtleR5g89lUrp8ERHUz05Om-sIAhA-jSwEItwlSICxtU5NBQLQTo",
-        zoom: 13,
-        showScalebar: false
-    };
-
-    $(function() {
-        var connection = new signalR.HubConnection("/location", { transport: signalR.TransportType.LongPolling });
-
-        connection.on('locationupdate',
-            message => {
-                console.log(message);
-                update(message);
-            });
-
-        connection.on('locationUpdates',
-            message => {
-                messages.Messages.forEach(update(message));
-            });
-
-        connection.start()
-            .then(() => console.log("listening for messages"));
-
-    });
-
-    function getMap() {
-        map = new Microsoft.Maps.Map("#mapDiv", mapOptions);
-        var pushpin = new Microsoft.Maps.Pushpin(map.getCenter(), null);
-        map.entities.push(pushpin);
-    }
-
-    function update(message) {
-        var loc = new Microsoft.Maps.Location(message.Latitude, message.Longitude);
-        if (devices[message.DeviceId]) {
-            devices[message.DeviceId].setLocation(loc);
-        } else {
-            devices[message.DeviceId] = new Microsoft.Maps.Pushpin(loc);
-            map.entities.push(devices[message.DeviceId]);
-        }
-        if (message.Velocity < 600) {
-            devices[message.DeviceId].setOptions({ icon: "https://www.bingmapsportal.com/Content/poi_custom.png" });
-        } else {
-            devices[message.DeviceId].setOptions({
-                icon: "https://www.bingmapsportal.com/Content/images/poi_custom.png"
-            });
-        }
-
-    }
-
-</script>
 </body>
 </html>
