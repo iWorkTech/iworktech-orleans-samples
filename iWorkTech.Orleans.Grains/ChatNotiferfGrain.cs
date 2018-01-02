@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection.Metadata;
 using System.Threading;
 using System.Threading.Tasks;
 using iWorkTech.Orleans.Common;
@@ -17,9 +18,9 @@ namespace iWorkTech.Orleans.Grains
         private readonly List<ChatMessage> _messageQueue = new List<ChatMessage>();
         private HubConnection _connection;
 
-        public async Task SendMessage(ChatMessage message)
+        public async Task NotifyMessage(ChatMessage message)
         {
-            Console.WriteLine("Chat ID:{0} Name:{1} Message: {2}", message.ChatId, message.Name,
+            Console.WriteLine("NotifyMessage Chat ID:{0} Name:{1} Message: {2}", message.ChatId, message.Name,
                 message.Message);
             // add a message to the send queue
             _messageQueue.Add(message);
@@ -32,14 +33,9 @@ namespace iWorkTech.Orleans.Grains
             // set up a timer to regularly flush the message queue
             RegisterTimer(FlushQueue, null, TimeSpan.FromMilliseconds(100), TimeSpan.FromMilliseconds(100));
 
-
-            _connection = new HubConnectionBuilder()
-                .WithUrl("http://localhost:60299/chat")
-                .WithConsoleLogger()
-                .Build();
-
-            await _connection.StartAsync();
-            _connection.On<string>("send", data => { Console.WriteLine($"Received: {data}"); });
+            await StartConnectionAsync();
+            _connection.On<string, string>("broadcastMessage",
+                (name, message) => { Console.WriteLine($"{name} said: {message}"); });
 
             await base.OnActivateAsync();
         }
@@ -49,21 +45,28 @@ namespace iWorkTech.Orleans.Grains
             await Flush();
         }
 
-        private async Task Flush()
+        public async Task Flush()
         {
             if (_messageQueue.Count == 0) return;
 
-            // send all messages to all SignalR hubs
-            var messagesToSend = _messageQueue.ToArray();
-            _messageQueue.Clear();
-
             try
             {
-               //_connection.On<string, string>("send",
-               //     (name, message) => { Console.WriteLine($"{name} said: {message}"); });
+                Console.WriteLine("Flusing Messages...");
+
+                // send all messages to all SignalR hubs
+                var messagesToSend = _messageQueue.ToArray();
+                _messageQueue.Clear();
 
                 foreach (var msg in messagesToSend)
-                    await _connection.InvokeAsync("send", (msg.Name,msg.Message));
+                {
+                    _connection.On<string, string>("broadcastMessage", (name, message) =>
+                    {
+                        Console.WriteLine($"{msg.Name} said: {msg.Message}");
+
+                    });
+                }
+
+                await DisposeAsync();
             }
             catch (Exception ex)
             {
@@ -71,33 +74,19 @@ namespace iWorkTech.Orleans.Grains
             }
         }
 
-        //private async Task RefreshHubs(object _)
-        //{
-        //    var addresses = new List<string>();
-        //    var tasks = new List<Task>();
+        public async Task StartConnectionAsync()
+        {
+            _connection = new HubConnectionBuilder()
+                .WithUrl("http://localhost:60299/chat")
+                .WithConsoleLogger()
+                .Build();
 
-        //    // discover the current infrastructure
-        //    foreach (var instance in RoleEnvironment.Roles["GPSTracker.Web"].Instances)
-        //    {
-        //        var endpoint = instance.InstanceEndpoints["InternalSignalR"];
-        //        addresses.Add(string.Format("http://{0}", endpoint.IPEndpoint.ToString()));
-        //    }
-        //    var newHubs = addresses.Where(x => !hubs.Keys.Contains(x)).ToArray();
-        //    var deadHubs = hubs.Keys.Where(x => !addresses.Contains(x)).ToArray();
+            await _connection.StartAsync();
+        }
 
-        //    // remove dead hubs
-        //    foreach (var hub in deadHubs)
-        //    {
-        //        hubs.Remove(hub);
-        //    }
-
-        //    // add new hubs
-        //    foreach (var hub in newHubs)
-        //    {
-        //        tasks.Add(AddHub(hub));
-        //    }
-
-        //    await Task.WhenAll(tasks);
-        //}
+        public async Task DisposeAsync()
+        {
+            await _connection.DisposeAsync();
+        }
     }
 }

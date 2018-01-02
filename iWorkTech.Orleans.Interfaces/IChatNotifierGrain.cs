@@ -8,6 +8,6 @@ namespace iWorkTech.Orleans.Interfaces
 
     public interface IChatNotifierGrain : IGrainWithIntegerKey
     {
-        Task SendMessage(ChatMessage message);
+        Task NotifyMessage(ChatMessage message);
     }
 }

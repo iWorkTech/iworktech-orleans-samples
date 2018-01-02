@@ -18,9 +18,9 @@ namespace iWorkTech.Orleans.Grains
         {
             var notifier = GrainFactory.GetGrain<IChatNotifierGrain>(0);
 
-            await notifier.SendMessage(message);
+            await notifier.NotifyMessage(message);
 
-            Console.WriteLine($"Message received: ChatId:{0} :: Name:{1} :: Message:{2}", message.ChatId, message.Name, message.Message);
+            Console.WriteLine($"ProcessMessage: ChatId:{0} :: Name:{1} :: Message:{2}", message.ChatId, message.Name, message.Message);
         }
     }
 }

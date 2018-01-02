@@ -25,6 +25,7 @@
     <PackageReference Include="Microsoft.Orleans.OrleansCodeGenerator" Version="2.0.0-ci.20171218.1" />
     <PackageReference Include="Microsoft.Orleans.OrleansCodeGenerator.Build" Version="2.0.0-ci.20171218.1" />
     <PackageReference Include="Microsoft.Orleans.OrleansProviders" Version="2.0.0-ci.20171218.1" />
+    <PackageReference Include="System.Reactive.Linq" Version="4.0.0-preview00001" />
   </ItemGroup>
 
   <ItemGroup>

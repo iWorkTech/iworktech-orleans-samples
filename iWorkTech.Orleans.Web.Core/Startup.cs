@@ -33,6 +33,7 @@ namespace iWorkTech.Orleans.Web.Core
                 {
                     routes.MapHub<LocationHub>("location");
                     routes.MapHub<ChatHub>("chat");
+                    routes.MapHub<StreamingHub>("streaming");
                 });
             }
             else

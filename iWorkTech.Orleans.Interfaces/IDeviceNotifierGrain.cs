@@ -5,7 +5,7 @@ using Orleans;
 
 namespace iWorkTech.Orleans.Interfaces
 {
-    public interface IPushNotifierGrain : IGrainWithIntegerKey
+    public interface IDeviceNotifierGrain : IGrainWithIntegerKey
     {
         Task SendMessage(VelocityMessage message);
     }
