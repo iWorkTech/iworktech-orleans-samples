@@ -4,12 +4,12 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Logging;
 
-namespace iWorkTech.SignalR.Console.Streaming.Client
+namespace iWorkTech.SignalR.Streaming.Client
 {
     class Program
     {
         private static HubConnection _connection;
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
 
             StartConnectionAsync();
@@ -17,7 +17,7 @@ namespace iWorkTech.SignalR.Console.Streaming.Client
             {
                 StartStreaming();
             });
-            //Console.ReadLine();
+            Console.ReadLine();
             DisposeAsync();
         }
 
@@ -29,7 +29,7 @@ namespace iWorkTech.SignalR.Console.Streaming.Client
             {
                 while (channel.TryRead(out string message))
                 {
-                    //Console.WriteLine($"Message received: {message}");
+                    Console.WriteLine($"Message received: {message}");
                 }
             }
         }
