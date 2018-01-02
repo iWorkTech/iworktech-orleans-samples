@@ -13,7 +13,7 @@
 
 <script type="text/javascript">
     var transport = signalR.TransportType.WebSockets;
-    var connection = new signalR.HubConnection("http://localhost:60299//streaming", { transport: transport });
+    var connection = new signalR.HubConnection("http://localhost:60299/streaming", { transport: transport });
     var button = document.getElementById("startStreaming");
     function startStreaming() {
         connection.stream("StartStreaming").subscribe({

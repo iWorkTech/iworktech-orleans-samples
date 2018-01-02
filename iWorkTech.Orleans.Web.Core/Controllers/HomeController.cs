@@ -20,7 +20,7 @@ namespace iWorkTech.Orleans.Web.Core.Controllers
 
         public IActionResult Streaming()
         {
-            ViewData["Message"] = "Your contact page.";
+            ViewData["Message"] = "Streaming Demo using ASP.NET Signalr Core";
 
             return View();
         }
