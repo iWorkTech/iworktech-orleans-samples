@@ -12,18 +12,18 @@ namespace iWorkTech.Orleans.Grains
 {
     [Reentrant]
     [StatelessWorker]
-    public class PushNotifierGrain : Grain, IPushNotifierGrain
+    public class ChatNotiferfGrain : Grain, IChatNotifierGrain
     {
-        private readonly List<VelocityMessage> _messageQueue = new List<VelocityMessage>();
+        private readonly List<ChatMessage> _messageQueue = new List<ChatMessage>();
         private HubConnection _connection;
 
-        public async Task SendMessage(VelocityMessage message)
+        public async Task SendMessage(ChatMessage message)
         {
-            Console.WriteLine("Device ID:{0} Lat:{1} Lon: {2}", message.DeviceId, message.Latitude,
-                message.Longitude);
+            Console.WriteLine("Chat ID:{0} Name:{1} Message: {2}", message.ChatId, message.Name,
+                message.Message);
             // add a message to the send queue
             _messageQueue.Add(message);
-            if (_messageQueue.Count > 25)
+            if (_messageQueue.Count > 5)
                 await Flush();
         }
 
@@ -32,16 +32,13 @@ namespace iWorkTech.Orleans.Grains
             // set up a timer to regularly flush the message queue
             RegisterTimer(FlushQueue, null, TimeSpan.FromMilliseconds(100), TimeSpan.FromMilliseconds(100));
 
-            // not in azure, the SignalR hub is running locally
-            //await AddHub("http://localhost:60299/location");
-            //await AddHub("https://localhost:44358/location");
 
             _connection = new HubConnectionBuilder()
-                .WithUrl("http://localhost:60299/location")
+                .WithUrl("http://localhost:60299/chat")
                 .WithConsoleLogger()
                 .Build();
 
-            _connection.On<string>("locationUpdate", data => { Console.WriteLine($"Received: {data}"); });
+            //_connection.On<string>("send", data => { Console.WriteLine($"Received: {data}"); });
             await _connection.StartAsync();
             await base.OnActivateAsync();
         }
@@ -61,11 +58,11 @@ namespace iWorkTech.Orleans.Grains
 
             try
             {
-               _connection.On<string, string>("locationUpdate",
+               _connection.On<string, string>("send",
                     (name, message) => { Console.WriteLine($"{name} said: {message}"); });
 
                 foreach (var msg in messagesToSend)
-                    await _connection.SendAsync("locationUpdate", msg, CancellationToken.None);
+                    await _connection.InvokeAsync("send", (msg.Name,msg.Message), CancellationToken.None);
             }
             catch (Exception ex)
             {

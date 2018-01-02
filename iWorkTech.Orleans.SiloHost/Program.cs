@@ -42,6 +42,7 @@ namespace iWorkTech.Orleans.SiloHost
             var builder = new SiloHostBuilder()
                 .UseConfiguration(config)
                 .ConfigureApplicationParts(parts => parts.AddApplicationPart(typeof(DeviceGrain).Assembly).WithReferences())
+                .ConfigureApplicationParts(parts => parts.AddApplicationPart(typeof(ChatGrain).Assembly).WithReferences())
                 .ConfigureLogging(logging => logging.AddConsole());
 
             var host = builder.Build();

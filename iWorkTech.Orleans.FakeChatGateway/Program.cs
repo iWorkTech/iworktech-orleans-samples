@@ -2,58 +2,31 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Timers;
 using iWorkTech.Orleans.Common;
 using iWorkTech.Orleans.Interfaces;
+using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Logging;
 using Orleans;
+using Orleans.Concurrency;
 using Orleans.Runtime;
 using Orleans.Runtime.Configuration;
 
-namespace iWorkTech.Orleans.FakeDeviceGateway
+namespace iWorkTech.Orleans.FakeChatGateway
 {
     internal class Program
     {
-        // San Francisco: approximate boundaries.
-        private const double SFLatMin = 37.708;
-        private const double SFLatMax = 37.78;
-        private const double SFLonMin = -122.50;
-        private const double SFLonMax = -122.39;
         private static int _counter;
         private static readonly Random Rand = new Random();
 
         private static async Task SendMessage(IGrainFactory client, Model model)
         {
-            // simulate the device moving
-            model.Speed += Rand.NextDouble(-0.0001, 0.0001);
-            model.Direction += Rand.NextDouble(-0.001, 0.001);
-
-            var lastLat = model.Lat;
-            var lastLon = model.Lon;
-
-            UpdateDevicePosition(model);
-
-            if (lastLat == model.Lat || lastLon == model.Lon)
-            {
-                // the device has hit the boundary, so reverse it's direction
-                model.Speed = -model.Speed;
-                UpdateDevicePosition(model);
-            }
+            model.Name = "Gateway";
 
             // send the mesage to Orleans
-            var device = client.GetGrain<IDeviceGrain>(model.DeviceId);
-            Console.WriteLine("Lat: {0} :: Lon :{1}", model.Lat, model.Lon);
-            await device.ProcessMessage(new DeviceMessage(model.Lat, model.Lon, _counter, model.DeviceId,
-                DateTime.UtcNow));
+            var chat = client.GetGrain<IChatGrain>(model.ChatId);
+            Console.WriteLine("ChatId: {0} :: Name: {1} :: Message :{2}", model.ChatId, model.Name, model.Message);
+            await chat.ProcessMessage(new ChatMessage(model.ChatId,model.Name, model.Message));
             Interlocked.Increment(ref _counter);
-        }
-
-        private static void UpdateDevicePosition(Model model)
-        {
-            model.Lat += Math.Cos(model.Direction) * model.Speed;
-            model.Lon += Math.Sin(model.Direction) * model.Speed;
-            model.Lat = model.Lat.Cap(SFLatMin, SFLatMax);
-            model.Lon = model.Lon.Cap(SFLonMin, SFLonMax);
         }
 
         private static int Main(string[] args)
@@ -91,7 +64,7 @@ namespace iWorkTech.Orleans.FakeDeviceGateway
                     client = new ClientBuilder()
                         .UseConfiguration(config)
                         .ConfigureApplicationParts(parts =>
-                            parts.AddApplicationPart(typeof(IDeviceGrain).Assembly).WithReferences())
+                            parts.AddApplicationPart(typeof(IChatGrain).Assembly).WithReferences())
                         .ConfigureLogging(logging => logging.AddConsole())
                         .Build();
 
@@ -114,16 +87,14 @@ namespace iWorkTech.Orleans.FakeDeviceGateway
 
         private static void DoClientWork(IGrainFactory client)
         {
-            // simulate 20 devices
-            var devices = new List<Model>();
-            for (var i = 0; i < 20; i++)
-                devices.Add(new Model
+            // simulate 5 people chating
+            var chats = new List<Model>();
+            for (var i = 0; i < 5; i++)
+                chats.Add(new Model
                 {
-                    DeviceId = i,
-                    Lat = Rand.NextDouble(SFLatMin, SFLatMax),
-                    Lon = Rand.NextDouble(SFLonMin, SFLonMax),
-                    Direction = Rand.NextDouble(-Math.PI, Math.PI),
-                    Speed = Rand.NextDouble(0, 0.0005)
+                    ChatId = i,
+                    Name = "Gateway",
+                    Message =  "Test Msg " + Rand.Next()
                 });
 
             var timer = new System.Timers.Timer { Interval = 1000 };
@@ -135,7 +106,7 @@ namespace iWorkTech.Orleans.FakeDeviceGateway
             timer.Start();
 
             // create a thread for each device, and continually move it's position
-            foreach (var model in devices)
+            foreach (var model in chats)
             {
                 var ts = new ThreadStart(async () =>
                 {
@@ -156,11 +127,9 @@ namespace iWorkTech.Orleans.FakeDeviceGateway
 
         private class Model
         {
-            public int DeviceId { get; set; }
-            public double Lat { get; set; }
-            public double Lon { get; set; }
-            public double Direction { get; set; }
-            public double Speed { get; set; }
+            public string Name { get; set; }
+            public string Message { get; set; }
+            public int ChatId { get; set; }
         }
     }
 }

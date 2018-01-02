@@ -13,7 +13,7 @@ namespace iWorkTech.Orleans.Web.Core.Controllers
 
         public IActionResult About()
         {
-            ViewData["Message"] = "Your application description page.";
+            ViewData["Message"] = "Chat Demo using ASP.NET Signalr Core";
 
             return View();
         }
