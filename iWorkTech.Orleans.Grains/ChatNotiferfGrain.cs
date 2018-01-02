@@ -38,8 +38,9 @@ namespace iWorkTech.Orleans.Grains
                 .WithConsoleLogger()
                 .Build();
 
-            //_connection.On<string>("send", data => { Console.WriteLine($"Received: {data}"); });
             await _connection.StartAsync();
+            _connection.On<string>("send", data => { Console.WriteLine($"Received: {data}"); });
+
             await base.OnActivateAsync();
         }
 
@@ -58,11 +59,11 @@ namespace iWorkTech.Orleans.Grains
 
             try
             {
-               _connection.On<string, string>("send",
-                    (name, message) => { Console.WriteLine($"{name} said: {message}"); });
+               //_connection.On<string, string>("send",
+               //     (name, message) => { Console.WriteLine($"{name} said: {message}"); });
 
                 foreach (var msg in messagesToSend)
-                    await _connection.InvokeAsync("send", (msg.Name,msg.Message), CancellationToken.None);
+                    await _connection.InvokeAsync("send", (msg.Name,msg.Message));
             }
             catch (Exception ex)
             {
