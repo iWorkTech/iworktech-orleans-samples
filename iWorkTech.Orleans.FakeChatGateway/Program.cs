@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Timers;
 using iWorkTech.Orleans.Common;
 using iWorkTech.Orleans.Interfaces;
-using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Logging;
 using Orleans;
-using Orleans.Concurrency;
 using Orleans.Runtime;
 using Orleans.Runtime.Configuration;
 
@@ -24,8 +23,9 @@ namespace iWorkTech.Orleans.FakeChatGateway
 
             // send the mesage to Orleans
             var chat = client.GetGrain<IChatGrain>(model.ChatId);
-            Console.WriteLine("ChatId: {0} :: Name: {1} :: Message :{2}", model.ChatId, model.Name, model.Message);
-            await chat.ProcessMessage(new ChatMessage(model.ChatId,model.Name, model.Message));
+            Console.WriteLine("NotifyMessage ChatId: {0} :: Name: {1} :: Message :{2}", model.ChatId, model.Name,
+                model.Message);
+            await chat.ProcessMessage(new ChatMessage(model.ChatId, model.Name, model.Message));
             Interlocked.Increment(ref _counter);
         }
 
@@ -89,15 +89,15 @@ namespace iWorkTech.Orleans.FakeChatGateway
         {
             // simulate 5 people chating
             var chats = new List<Model>();
-            for (var i = 0; i < 5; i++)
+            for (_counter = 0; _counter < 5; _counter++)
                 chats.Add(new Model
                 {
-                    ChatId = i,
-                    Name = "Gateway",
-                    Message =  "Test Msg " + Rand.Next()
+                    ChatId = _counter,
+                    Name = "System",
+                    Message = "Test Msg " + Rand.Next()
                 });
 
-            var timer = new System.Timers.Timer { Interval = 1000 };
+            var timer = new System.Timers.Timer { Interval = 1000};
             timer.Elapsed += (s, e) =>
             {
                 Console.Write(". ");

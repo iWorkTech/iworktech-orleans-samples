@@ -23,7 +23,7 @@ namespace iWorkTech.Orleans.Grains
                 LastMessage.Longitude != message.Longitude)
             {
                 // only sent a notification if the position has changed
-                var notifier = GrainFactory.GetGrain<IPushNotifierGrain>(0);
+                var notifier = GrainFactory.GetGrain<IDeviceNotifierGrain>(0);
                 var speed = GetSpeed(LastMessage, message);
 
                 // record the last message

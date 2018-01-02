@@ -11,14 +11,14 @@ namespace iWorkTech.Orleans.Web.Core.Controllers
             return View();
         }
 
-        public IActionResult About()
+        public IActionResult Chat()
         {
             ViewData["Message"] = "Chat Demo using ASP.NET Signalr Core";
 
             return View();
         }
 
-        public IActionResult Contact()
+        public IActionResult Streaming()
         {
             ViewData["Message"] = "Your contact page.";
 

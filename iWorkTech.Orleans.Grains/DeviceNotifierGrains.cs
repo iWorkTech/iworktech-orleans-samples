@@ -12,7 +12,7 @@ namespace iWorkTech.Orleans.Grains
 {
     [Reentrant]
     [StatelessWorker]
-    public class PushNotifierGrain : Grain, IPushNotifierGrain
+    public class DeviceNotifierGrain : Grain, IDeviceNotifierGrain
     {
         private readonly List<VelocityMessage> _messageQueue = new List<VelocityMessage>();
         private HubConnection _connection;
@@ -41,7 +41,6 @@ namespace iWorkTech.Orleans.Grains
                 .WithConsoleLogger()
                 .Build();
 
-            _connection.On<string>("locationUpdate", data => { Console.WriteLine($"Received: {data}"); });
             await _connection.StartAsync();
             await base.OnActivateAsync();
         }
@@ -73,33 +72,5 @@ namespace iWorkTech.Orleans.Grains
             }
         }
 
-        //private async Task RefreshHubs(object _)
-        //{
-        //    var addresses = new List<string>();
-        //    var tasks = new List<Task>();
-
-        //    // discover the current infrastructure
-        //    foreach (var instance in RoleEnvironment.Roles["GPSTracker.Web"].Instances)
-        //    {
-        //        var endpoint = instance.InstanceEndpoints["InternalSignalR"];
-        //        addresses.Add(string.Format("http://{0}", endpoint.IPEndpoint.ToString()));
-        //    }
-        //    var newHubs = addresses.Where(x => !hubs.Keys.Contains(x)).ToArray();
-        //    var deadHubs = hubs.Keys.Where(x => !addresses.Contains(x)).ToArray();
-
-        //    // remove dead hubs
-        //    foreach (var hub in deadHubs)
-        //    {
-        //        hubs.Remove(hub);
-        //    }
-
-        //    // add new hubs
-        //    foreach (var hub in newHubs)
-        //    {
-        //        tasks.Add(AddHub(hub));
-        //    }
-
-        //    await Task.WhenAll(tasks);
-        //}
     }
 }
