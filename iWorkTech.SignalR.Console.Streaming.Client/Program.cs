@@ -63,6 +63,8 @@ namespace iWorkTech.SignalR.Streaming.Client
             }
 
             Console.WriteLine("Wating for messages from Hub");
+            Console.WriteLine("Press Enter to terminate");
+
         }
     }
 }
