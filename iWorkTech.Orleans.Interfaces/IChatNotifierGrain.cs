@@ -5,7 +5,6 @@ using Orleans;
 
 namespace iWorkTech.Orleans.Interfaces
 {
-
     public interface IChatNotifierGrain : IGrainWithIntegerKey
     {
         Task NotifyMessage(ChatMessage message);

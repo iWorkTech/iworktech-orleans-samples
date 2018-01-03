@@ -7,7 +7,7 @@ using Orleans;
 using Orleans.Hosting;
 namespace iWorkTech.Orleans.SiloHost
 {
-    class Program
+    public class Program
     {
         public static int Main(string[] args)
         {
@@ -21,7 +21,6 @@ namespace iWorkTech.Orleans.SiloHost
                 var host = await StartSilo();
                 Console.WriteLine("Press Enter to terminate...");
                 Console.ReadLine();
-
                 await host.StopAsync();
 
                 return 0;
@@ -41,8 +40,7 @@ namespace iWorkTech.Orleans.SiloHost
 
             var builder = new SiloHostBuilder()
                 .UseConfiguration(config)
-                .ConfigureApplicationParts(parts => parts.AddApplicationPart(typeof(DeviceGrain).Assembly).WithReferences())
-                .ConfigureApplicationParts(parts => parts.AddApplicationPart(typeof(ChatGrain).Assembly).WithReferences())
+                .ConfigureApplicationParts(parts => parts.AddFromAppDomain().AddFromApplicationBaseDirectory())
                 .ConfigureLogging(logging => logging.AddConsole());
 
             var host = builder.Build();

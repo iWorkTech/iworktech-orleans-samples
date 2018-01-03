@@ -14,13 +14,12 @@ namespace iWorkTech.Orleans.Grains
     [Reentrant]
     public class ChatGrain : Grain, IChatGrain
     {
-        public async Task ProcessMessage(ChatMessage message)
+        public Task ProcessMessage(ChatMessage message)
         {
+            Console.WriteLine("ProcessMessage {0} {1} {2}", message.ChatId, message.Name, message.Message);
             var notifier = GrainFactory.GetGrain<IChatNotifierGrain>(0);
-
-            await notifier.NotifyMessage(message);
-
-            Console.WriteLine($"ProcessMessage: ChatId:{0} :: Name:{1} :: Message:{2}", message.ChatId, message.Name, message.Message);
+            notifier.NotifyMessage(message);
+            return Task.CompletedTask;
         }
     }
 }

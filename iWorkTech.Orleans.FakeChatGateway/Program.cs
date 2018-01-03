@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
-using System.Timers;
 using iWorkTech.Orleans.Common;
 using iWorkTech.Orleans.Interfaces;
 using Microsoft.Extensions.Logging;
@@ -17,18 +15,6 @@ namespace iWorkTech.Orleans.FakeChatGateway
         private static int _counter;
         private static readonly Random Rand = new Random();
 
-        private static async Task SendMessage(IGrainFactory client, Model model)
-        {
-            model.Name = "Gateway";
-
-            // send the mesage to Orleans
-            var chat = client.GetGrain<IChatGrain>(model.ChatId);
-            Console.WriteLine("NotifyMessage ChatId: {0} :: Name: {1} :: Message :{2}", model.ChatId, model.Name,
-                model.Message);
-            await chat.ProcessMessage(new ChatMessage(model.ChatId, model.Name, model.Message));
-            Interlocked.Increment(ref _counter);
-        }
-
         private static int Main(string[] args)
         {
             return RunMainAsync().Result;
@@ -40,7 +26,7 @@ namespace iWorkTech.Orleans.FakeChatGateway
             {
                 using (var client = await StartClientWithRetries())
                 {
-                    DoClientWork(client);
+                    await DoClientWork(client);
                     Console.ReadKey();
                 }
 
@@ -85,51 +71,27 @@ namespace iWorkTech.Orleans.FakeChatGateway
             return client;
         }
 
-        private static void DoClientWork(IGrainFactory client)
+        private static Task DoClientWork(IClusterClient client)
         {
-            // simulate 5 people chating
-            var chats = new List<Model>();
+            var chatGrain = client.GetGrain<IChatGrain>(0);
+            var chats = new List<ChatMessage>();
             for (_counter = 0; _counter < 5; _counter++)
-                chats.Add(new Model
+                chats.Add(new ChatMessage
                 {
                     ChatId = _counter,
                     Name = "System",
                     Message = "Test Msg " + Rand.Next()
                 });
 
-            var timer = new System.Timers.Timer { Interval = 1000};
-            timer.Elapsed += (s, e) =>
+            foreach (var msg in chats)
             {
-                Console.Write(". ");
-                Interlocked.Exchange(ref _counter, 0);
-            };
-            timer.Start();
+                Console.WriteLine("Send Message to Orleans Silo {0} {1} {2}", msg.ChatId, msg.Name,
+                    msg.Message);
 
-            // create a thread for each device, and continually move it's position
-            foreach (var model in chats)
-            {
-                var ts = new ThreadStart(async () =>
-                {
-                    while (true)
-                        try
-                        {
-                            await SendMessage(client, model);
-                            Thread.Sleep(Rand.Next(500, 2500));
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine(ex.ToString());
-                        }
-                });
-                new Thread(ts).Start();
+                chatGrain.ProcessMessage(msg);
             }
-        }
 
-        private class Model
-        {
-            public string Name { get; set; }
-            public string Message { get; set; }
-            public int ChatId { get; set; }
+            return Task.CompletedTask;
         }
     }
 }
