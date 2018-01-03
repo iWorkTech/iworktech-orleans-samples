@@ -23,6 +23,7 @@ namespace iWorkTech.SignalR.Client
                 Connection.On<string, string>("broadcastMessage",
                     (name, message) => { Console.WriteLine($"{name} said: {message}"); });
 
+                Console.WriteLine("Starting client work");
                 await DoClientWork();
                 Console.WriteLine("Finished client work");
                 await DisposeAsync();
@@ -35,7 +36,6 @@ namespace iWorkTech.SignalR.Client
                 return 1;
             }
         }
-
 
         private static async Task StartConnectionAsync()
         {

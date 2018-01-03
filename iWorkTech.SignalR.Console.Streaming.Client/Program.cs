@@ -2,51 +2,67 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR.Client;
-using Microsoft.Extensions.Logging;
 
 namespace iWorkTech.SignalR.Streaming.Client
 {
-    class Program
+    internal class Program
     {
-        private static HubConnection _connection;
-        public static void Main(string[] args)
-        {
+        public static HubConnection Connection { get; set; }
 
-            StartConnectionAsync();
-            _connection.On("streamStarted", () =>
-            {
-                StartStreaming();
-            });
-            Console.ReadLine();
-            DisposeAsync();
+        private static int Main(string[] args)
+        {
+            return RunMainAsync().Result;
         }
 
-
-        public static async Task StartStreaming()
+        private static async Task<int> RunMainAsync()
         {
-            var channel = await _connection.StreamAsync<string>("StartStreaming", CancellationToken.None);
-            while (await channel.WaitToReadAsync())
+            try
             {
-                while (channel.TryRead(out string message))
-                {
-                    Console.WriteLine($"Message received: {message}");
-                }
+                await StartConnectionAsync();
+                Console.WriteLine("Starting client work");
+                Connection.On("streamStarted", async () => { await DoClientWork(); });
+                Console.ReadLine();
+                Console.WriteLine("Finished client work");
+                await DisposeAsync();
+                Console.WriteLine("Disposing hub connection");
+                return 0;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return 1;
             }
         }
 
-        public static async Task StartConnectionAsync()
+        private static async Task StartConnectionAsync()
         {
-            _connection = new HubConnectionBuilder()
+            Connection = new HubConnectionBuilder()
                 .WithUrl("http://localhost:60299/streaming")
                 .WithConsoleLogger()
                 .Build();
 
-            await _connection.StartAsync();
+            await Connection.StartAsync();
+            Console.WriteLine("Client successfully connected to hub");
         }
 
         public static async Task DisposeAsync()
         {
-            await _connection.DisposeAsync();
+            await Connection.DisposeAsync();
+        }
+
+        private static async Task DoClientWork()
+        {
+            Console.WriteLine("Streaming messages to Hub");
+            var channel = await Connection.StreamAsync<string>("StartStreaming", CancellationToken.None);
+            while (await channel.WaitToReadAsync())
+            {
+                while (channel.TryRead(out var message))
+                {
+                    Console.WriteLine($"Message received: {message}");
+                }
+            }
+
+            Console.WriteLine("Streaming messages to Hub");
         }
     }
 }
