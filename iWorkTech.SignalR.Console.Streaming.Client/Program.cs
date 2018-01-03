@@ -52,7 +52,7 @@ namespace iWorkTech.SignalR.Streaming.Client
 
         private static async Task DoClientWork()
         {
-            Console.WriteLine("Streaming messages to Hub");
+            Console.WriteLine("Recieving messages from Hub");
             var channel = await Connection.StreamAsync<string>("StartStreaming", CancellationToken.None);
             while (await channel.WaitToReadAsync())
             {
@@ -62,7 +62,7 @@ namespace iWorkTech.SignalR.Streaming.Client
                 }
             }
 
-            Console.WriteLine("Streaming messages to Hub");
+            Console.WriteLine("Wating for messages from Hub");
         }
     }
 }
