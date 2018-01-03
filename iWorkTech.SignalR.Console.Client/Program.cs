@@ -7,41 +7,58 @@ namespace iWorkTech.SignalR.Client
 {
     internal class Program
     {
-        private static HubConnection _connection;
+        public static HubConnection Connection { get; set; }
 
-        private static void Main(string[] args)
+        private static int Main(string[] args)
         {
-            StartConnectionAsync();
+            return RunMainAsync().Result;
+        }
 
-            _connection.On<string, string>("broadcastMessage",
-                (name, message) => {Console.WriteLine($"{name} said: {message}"); });
-
-            Console.ReadLine();
-
-            for (var i = 0; i < 5; i++)
+        private static async Task<int> RunMainAsync()
+        {
+            try
             {
-                _connection.InvokeAsync("send", "name", i, CancellationToken.None);
+                await StartConnectionAsync();
+
+                Connection.On<string, string>("broadcastMessage",
+                    (name, message) => { Console.WriteLine($"{name} said: {message}"); });
+
+                await DoClientWork();
+                Console.WriteLine("Finished client work");
+                await DisposeAsync();
+                Console.WriteLine("Disposing hub connection");
+                return 0;
             }
-
-            Console.ReadLine();
-
-            DisposeAsync();
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return 1;
+            }
         }
 
 
         private static async Task StartConnectionAsync()
         {
-            _connection = new HubConnectionBuilder()
+            Connection = new HubConnectionBuilder()
                 .WithUrl("http://localhost:60299/chat")
                 .WithConsoleLogger()
                 .Build();
 
-            await _connection.StartAsync();
+            await Connection.StartAsync();
+            Console.WriteLine("Client successfully connected to hub");
         }
 
         public static async Task DisposeAsync()
         {
-            await _connection.DisposeAsync();
+            await Connection.DisposeAsync();
+        }
+
+        private static async Task DoClientWork()
+        {
+            Console.WriteLine("Sending messages to Hub");
+            for (var i = 0; i < 5; i++) await Connection.InvokeAsync("send", "name", i, CancellationToken.None);
+            Console.WriteLine("Finished sending messages to Hub");
+
         }
     }
 }
