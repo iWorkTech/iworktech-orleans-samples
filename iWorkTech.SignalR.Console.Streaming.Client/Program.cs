@@ -19,7 +19,7 @@ namespace iWorkTech.SignalR.Streaming.Client
             try
             {
                 await StartConnectionAsync();
-                Console.WriteLine("Starting client work");
+                Console.WriteLine("Starting client work and wating for messages from Hub");
                 Connection.On("streamStarted", async () => { await DoClientWork(); });
                 Console.ReadLine();
                 Console.WriteLine("Finished client work");
