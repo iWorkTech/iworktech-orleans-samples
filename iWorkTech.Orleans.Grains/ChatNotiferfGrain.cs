@@ -15,24 +15,23 @@ namespace iWorkTech.Orleans.Grains
     {
         private HubConnection _connection;
 
-        public Task NotifyMessage(ChatMessage message)
+        public Task NotifyMessage(ChatMessage msg)
         {
-            Console.WriteLine("NotifyMessage Chat ID:{0} Name:{1} Message: {2}", message.ChatId, message.Name,
-                message.Message);
+            Console.WriteLine("NotifyMessage Chat ID:{0} Name:{1} Message: {2}", msg.ChatId, msg.Name,
+                msg.Message);
 
-            Console.WriteLine("Sending Messages...");
-            _connection.InvokeAsync("send", message.Name, message.Message, CancellationToken.None);
+            //_connection.InvokeAsync("send", message.Name, message.Message, CancellationToken.None);
+            //_connection.On<string, string>("broadcastMessage",
+            //    (name, message) => { Console.WriteLine($"{msg.Name} said: {msg.Message}"); });
+
+            Console.WriteLine("Sent Messages...");
 
             return Task.CompletedTask;
         }
 
         public override async Task OnActivateAsync()
         {
-            await StartConnectionAsync();
-
-            _connection.On<string, string>("broadcastMessage",
-                (name, message) => { Console.WriteLine($"{name} said: {message}"); });
-
+            //await StartConnectionAsync();
             await base.OnActivateAsync();
         }
 
