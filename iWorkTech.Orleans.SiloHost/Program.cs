@@ -2,6 +2,7 @@
 using System;
 using System.Threading.Tasks;
 using iWorkTech.Orleans.Grains;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Orleans;
 using Orleans.Hosting;
@@ -36,7 +37,8 @@ namespace iWorkTech.Orleans.SiloHost
         private static async Task<ISiloHost> StartSilo()
         {
             // define the cluster configuration
-            var config = ClusterConfiguration.LocalhostPrimarySilo();
+            var config = ClusterConfiguration.LocalhostPrimarySilo()
+                .AddSignalR();
             config.AddMemoryStorageProvider();
 
             var builder = new SiloHostBuilder()
@@ -44,7 +46,7 @@ namespace iWorkTech.Orleans.SiloHost
                 .ConfigureApplicationParts(parts => parts.AddApplicationPart(typeof(DeviceGrain).Assembly).WithReferences())
                 .ConfigureApplicationParts(parts => parts.AddApplicationPart(typeof(ChatGrain).Assembly).WithReferences())
                 .ConfigureLogging(logging => logging.AddConsole());
-
+            
             var host = builder.Build();
             await host.StartAsync();
             return host;

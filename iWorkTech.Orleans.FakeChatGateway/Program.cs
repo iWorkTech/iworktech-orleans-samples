@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Timers;
 using iWorkTech.Orleans.Common;
 using iWorkTech.Orleans.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Orleans;
 using Orleans.Runtime;
@@ -60,12 +61,15 @@ namespace iWorkTech.Orleans.FakeChatGateway
             while (true)
                 try
                 {
-                    var config = ClientConfiguration.LocalhostSilo();
+                    var config = ClientConfiguration.LocalhostSilo()
+                        .AddSignalR(); 
+
                     client = new ClientBuilder()
                         .UseConfiguration(config)
                         .ConfigureApplicationParts(parts =>
                             parts.AddApplicationPart(typeof(IChatGrain).Assembly).WithReferences())
                         .ConfigureLogging(logging => logging.AddConsole())
+                        .UseSignalR()
                         .Build();
 
                     await client.Connect();

@@ -17,11 +17,18 @@
     <PackageReference Include="Microsoft.Orleans.OrleansProviders" Version="2.0.0-ci.20180101.1" />
     <PackageReference Include="Microsoft.Orleans.OrleansRuntime" Version="2.0.0-ci.20180101.1" />
     <PackageReference Include="Microsoft.Orleans.Server" Version="2.0.0-ci.20180101.1" />
+    <PackageReference Include="SignalR.Orleans" Version="1.0.0-preview-32" />
   </ItemGroup>
  
  <ItemGroup>
    <ProjectReference Include="..\iWorkTech.Orleans.Common\iWorkTech.Orleans.Common.csproj" />
    <ProjectReference Include="..\iWorkTech.Orleans.Grains\iWorkTech.Orleans.Grains.csproj" />
+ </ItemGroup>
+ 
+ <ItemGroup>
+   <Reference Include="SignalR.Orleans">
+     <HintPath>C:\Users\ameet\.nuget\packages\signalr.orleans\1.0.0-preview-32\lib\netstandard2.0\SignalR.Orleans.dll</HintPath>
+   </Reference>
  </ItemGroup>
 
 </Project>
