@@ -7,8 +7,10 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.0.0-alpha2-final" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client.Core" Version="1.0.0-alpha2-final" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Common" Version="1.0.0-alpha2-final" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="2.0.0" />
     <PackageReference Include="Microsoft.Orleans.Client" Version="2.0.0-ci.20180101.1" />
     <PackageReference Include="Microsoft.Orleans.Core" Version="2.0.0-ci.20180101.1" />
     <PackageReference Include="Microsoft.Orleans.Core.Abstractions" Version="2.0.0-ci.20180101.1" />
@@ -16,7 +18,6 @@
     <PackageReference Include="Microsoft.Orleans.OrleansCodeGenerator.Build" Version="2.0.0-ci.20180101.1" />
     <PackageReference Include="Microsoft.Orleans.OrleansProviders" Version="2.0.0-ci.20180101.1" />
     <PackageReference Include="Microsoft.Orleans.OrleansRuntime" Version="2.0.0-ci.20180101.1" />
-    <PackageReference Include="Microsoft.Orleans.Server" Version="2.0.0-ci.20180101.1" />
     <PackageReference Include="SignalR.Orleans" Version="1.0.0-preview-32" />
   </ItemGroup>
 
