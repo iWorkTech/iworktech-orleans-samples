@@ -1,14 +1,15 @@
-﻿using Orleans.Runtime.Configuration;
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using iWorkTech.Orleans.Grains;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Orleans;
 using Orleans.Hosting;
+using Orleans.Runtime.Configuration;
+
 namespace iWorkTech.Orleans.SiloHost
 {
-    class Program
+    internal class Program
     {
         public static int Main(string[] args)
         {
@@ -37,17 +38,19 @@ namespace iWorkTech.Orleans.SiloHost
         private static async Task<ISiloHost> StartSilo()
         {
             // define the cluster configuration
-            var config = ClusterConfiguration.LocalhostPrimarySilo()
+            var siloConfig = ClusterConfiguration.LocalhostPrimarySilo()
                 .AddSignalR();
-            config.AddMemoryStorageProvider();
+            siloConfig.AddMemoryStorageProvider();
 
-            var builder = new SiloHostBuilder()
-                .UseConfiguration(config)
-                .ConfigureApplicationParts(parts => parts.AddApplicationPart(typeof(DeviceGrain).Assembly).WithReferences())
-                .ConfigureApplicationParts(parts => parts.AddApplicationPart(typeof(ChatGrain).Assembly).WithReferences())
+            var silo = new SiloHostBuilder()
+                .UseConfiguration(siloConfig)
+                .ConfigureApplicationParts(parts =>
+                    parts.AddApplicationPart(typeof(DeviceGrain).Assembly).WithReferences())
+                .ConfigureApplicationParts(parts =>
+                    parts.AddApplicationPart(typeof(ChatGrain).Assembly).WithReferences())
                 .ConfigureLogging(logging => logging.AddConsole());
-            
-            var host = builder.Build();
+
+            var host = silo.Build();
             await host.StartAsync();
             return host;
         }
