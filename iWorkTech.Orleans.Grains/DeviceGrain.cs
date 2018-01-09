@@ -31,7 +31,7 @@ namespace iWorkTech.Orleans.Grains
 
                 // forward the message to the notifier grain
                 var velocityMessage = new VelocityMessage(message, speed);
-                await notifier.SendMessage(velocityMessage);
+                await notifier.Notify(velocityMessage);
             }
             else
             {
