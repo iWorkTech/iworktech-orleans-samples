@@ -1,6 +1,7 @@
 ﻿using iWorkTech.Orleans.Web.Core.Hub;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -19,7 +20,8 @@ namespace iWorkTech.Orleans.Web.Core
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-            services.AddSignalR();
+            services.AddSignalR()
+            .AddOrleans();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -29,12 +31,12 @@ namespace iWorkTech.Orleans.Web.Core
             {
                 app.UseDeveloperExceptionPage();
                 app.UseBrowserLink();
-                app.UseSignalR(routes =>
-                {
-                    routes.MapHub<LocationHub>("location");
-                    routes.MapHub<ChatHub>("chat");
-                    routes.MapHub<StreamingHub>("streaming");
-                });
+                //app.UseSignalR(routes =>
+                //{
+                //    routes.MapHub<LocationHub>("location");
+                //    routes.MapHub<ChatHub>("chat");
+                //    routes.MapHub<StreamingHub>("streaming");
+                //});
             }
             else
             {

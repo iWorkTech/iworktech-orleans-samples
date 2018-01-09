@@ -7,6 +7,6 @@ namespace iWorkTech.Orleans.Interfaces
 {
     public interface IDeviceNotifierGrain : IGrainWithIntegerKey
     {
-        Task SendMessage(VelocityMessage message);
+        Task Notify(VelocityMessage message);
     }
 }

@@ -8,20 +8,20 @@ using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.AspNetCore.Sockets;
 using Orleans;
 using Orleans.Concurrency;
+using SignalR.Orleans.Core;
 
 namespace iWorkTech.Orleans.Grains
 {
     [Reentrant]
     [StatelessWorker]
-    public class DeviceNotifierGrain : Grain, IDeviceNotifierGrain
+    public class ChatNotifierfGrain : Grain, IChatNotifierGrain
     {
-        private readonly List<VelocityMessage> _messageQueue = new List<VelocityMessage>();
+        private readonly List<ChatMessage> _messageQueue = new List<ChatMessage>();
         private HubConnection _connection;
 
-        public async Task Notify(VelocityMessage message)
+        public async Task NotifyMessage(ChatMessage message)
         {
-            Console.WriteLine("Device ID:{0} Lat:{1} Lon: {2}", message.DeviceId, message.Latitude,
-                message.Longitude);
+            Console.WriteLine("Device ID:{0} Lat:{1} Lon: {2}", message.Name, message.Message);
             // add a message to the send queue
             _messageQueue.Add(message);
             if (_messageQueue.Count > 25)
@@ -34,7 +34,7 @@ namespace iWorkTech.Orleans.Grains
             RegisterTimer(FlushQueue, null, TimeSpan.FromMilliseconds(100), TimeSpan.FromMilliseconds(100));
 
             _connection = new HubConnectionBuilder()
-                .WithUrl("http://localhost:60299/location")
+                .WithUrl("http://localhost:60299/streaming")
                 .WithConsoleLogger()
                 .WithMessagePackProtocol()
                 .WithTransport(TransportType.WebSockets)
@@ -72,14 +72,14 @@ namespace iWorkTech.Orleans.Grains
 
             _connection.On("marketOpened", async () =>
             {
-                await StartStreaming();
+                await Notify();
             });
 
-            // Do an initial check to see if we can start streaming the stocks
+            // Do an initial check to see if we can start streaming the chat
             var state = await _connection.InvokeAsync<string>("GetMarketState", cancellationToken: cts.Token);
             if (string.Equals(state, "Open"))
             {
-                await StartStreaming();
+                await Notify();
             }
 
             // Keep client running until cancel requested.
@@ -88,14 +88,14 @@ namespace iWorkTech.Orleans.Grains
                 await Task.Delay(250, cts.Token);
             }
 
-            async Task StartStreaming()
+            async Task Notify()
             {
-                var channel = await _connection.StreamAsync<VelocityMessage>("StreamStocks", CancellationToken.None);
+                var channel = await _connection.StreamAsync<ChatMessage>("StreamStocks", CancellationToken.None);
                 while (await channel.WaitToReadAsync(cts.Token) && !cts.IsCancellationRequested)
                 {
-                    while (channel.TryRead(out var velocity))
+                    while (channel.TryRead(out var chat))
                     {
-                        Console.WriteLine($"{velocity.Latitude} {velocity.Longitude}");
+                        Console.WriteLine($"{chat.Name} {chat.Message}");
                     }
                 }
             }
@@ -108,5 +108,6 @@ namespace iWorkTech.Orleans.Grains
                 Console.WriteLine(ex);
             }
         }
+
     }
 }
