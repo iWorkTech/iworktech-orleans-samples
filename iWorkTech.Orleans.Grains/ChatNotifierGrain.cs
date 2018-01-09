@@ -35,10 +35,10 @@ namespace iWorkTech.Orleans.Grains
         public Task StartConnectionAsync()
         {
             Connection = new HubConnectionBuilder()
-                .WithUrl("http://localhost:60299/chat")
-                .WithConsoleLogger()
+                //.WithUrl("http://localhost:60299/chat")
+                //.WithConsoleLogger()
                 .WithMessagePackProtocol()
-                .WithTransport(TransportType.WebSockets)
+                //.WithTransport(TransportType.WebSockets)
                 .Build();
 
             //Connection.InvokeAsync("send", message.Name, message.Message, CancellationToken.None);
