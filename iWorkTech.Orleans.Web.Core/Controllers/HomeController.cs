@@ -18,6 +18,14 @@ namespace iWorkTech.Orleans.Web.Core.Controllers
             return View();
         }
 
+
+        public IActionResult Draw()
+        {
+            ViewData["Whiteboard"] = "Whiteboard Demo using ASP.NET Signalr Core";
+
+            return View();
+        }
+
         public IActionResult Streaming()
         {
             ViewData["Message"] = "Streaming Demo using ASP.NET Signalr Core";

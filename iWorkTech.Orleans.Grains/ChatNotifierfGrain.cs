@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.AspNetCore.Sockets;
 using Orleans;
 using Orleans.Concurrency;
-using SignalR.Orleans.Core;
 
 namespace iWorkTech.Orleans.Grains
 {

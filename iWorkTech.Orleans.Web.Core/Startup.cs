@@ -20,8 +20,7 @@ namespace iWorkTech.Orleans.Web.Core
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-            services.AddSignalR()
-            .AddOrleans();
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -31,12 +30,13 @@ namespace iWorkTech.Orleans.Web.Core
             {
                 app.UseDeveloperExceptionPage();
                 app.UseBrowserLink();
-                //app.UseSignalR(routes =>
-                //{
-                //    routes.MapHub<LocationHub>("location");
-                //    routes.MapHub<ChatHub>("chat");
-                //    routes.MapHub<StreamingHub>("streaming");
-                //});
+                app.UseSignalR(routes =>
+                {
+                    routes.MapHub<LocationHub>("location");
+                    routes.MapHub<ChatHub>("chat");
+                    routes.MapHub<DrawHub>("draw");
+                    routes.MapHub<StreamingHub>("streaming");
+                });
             }
             else
             {
