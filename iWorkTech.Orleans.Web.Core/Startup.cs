@@ -31,10 +31,10 @@ namespace iWorkTech.Orleans.Web.Core
                 app.UseBrowserLink();
                 app.UseSignalR(routes =>
                 {
-                    routes.MapHub<LocationHub>("location");
-                    routes.MapHub<ChatHub>("chat");
-                    routes.MapHub<DrawHub>("draw");
-                    routes.MapHub<StreamingHub>("streaming");
+                    routes.MapHub<LocationHub>("/location");
+                    routes.MapHub<ChatHub>("/chat");
+                    routes.MapHub<DrawHub>("/draw");
+                    routes.MapHub<StreamingHub>("/streaming");
                 });
             }
             else
