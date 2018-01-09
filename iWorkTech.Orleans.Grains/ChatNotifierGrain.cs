@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using iWorkTech.Orleans.Common;
 using iWorkTech.Orleans.Interfaces;
 using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.AspNetCore.Sockets;
 using Orleans;
 using Orleans.Concurrency;
 
@@ -36,7 +37,13 @@ namespace iWorkTech.Orleans.Grains
             Connection = new HubConnectionBuilder()
                 .WithUrl("http://localhost:60299/chat")
                 .WithConsoleLogger()
+                .WithMessagePackProtocol()
+                .WithTransport(TransportType.WebSockets)
                 .Build();
+
+            //Connection.InvokeAsync("send", message.Name, message.Message, CancellationToken.None);
+            Connection.On<string, string>("broadcastMessage",
+                (name, message) => { Console.WriteLine($"{name} said: {message}"); });
 
             return Connection.StartAsync();
         }
