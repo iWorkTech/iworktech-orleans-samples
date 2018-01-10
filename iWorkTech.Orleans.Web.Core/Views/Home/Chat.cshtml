@@ -10,11 +10,12 @@
     <ul id="discussion"></ul>
 </div>
 
-<script type="text/javascript" src="~/scripts/signalr-client-1.0.0-alpha2-final.min.js"></script>
+<script type="text/javascript" src="~/scripts/signalr-client.min.js"></script>
 
 <script type="text/javascript">
     var transport =  signalR.TransportType.WebSockets;
-    var connection = new signalR.HubConnection('http://localhost:60299/chat', { transport: transport });
+    var connection = new signalR.HubConnection("http://localhost:60299/chat", { transport: transport });
+     connection.start();
     var messageInput = document.getElementById('message');
     var name = prompt('Enter your name:', '');
     var button = document.getElementById("sendMessage");
@@ -28,5 +29,5 @@
         messageInput.value = '';
         messageInput.focus();
     });
-    connection.start();
+   
 </script>

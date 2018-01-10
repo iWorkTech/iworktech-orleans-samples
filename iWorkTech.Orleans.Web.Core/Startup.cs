@@ -19,6 +19,7 @@ namespace iWorkTech.Orleans.Web.Core
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+            services.AddCors();
             services.AddSignalR();
         }
 
@@ -31,11 +32,15 @@ namespace iWorkTech.Orleans.Web.Core
                 app.UseBrowserLink();
                 app.UseSignalR(routes =>
                 {
-                    routes.MapHub<LocationHub>("location");
-                    routes.MapHub<ChatHub>("chat");
-                    routes.MapHub<DrawHub>("draw");
-                    routes.MapHub<StreamingHub>("streaming");
+                    routes.MapHub<LocationHub>("/location");
+                    routes.MapHub<ChatHub>("/chat");
+                    routes.MapHub<DrawHub>("/draw");
+                    routes.MapHub<StreamingHub>("/streaming");
                 });
+
+                // Shows UseCors with CorsPolicyBuilder.
+                app.UseCors(builder =>
+                    builder.WithOrigins("*"));
             }
             else
             {

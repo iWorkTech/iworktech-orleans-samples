@@ -21,7 +21,7 @@
     </select>
     <div id="output"></div>
 </div>
-<script type="text/javascript" src="~/scripts/signalr-client-1.0.0-alpha2-final.min.js"></script>
+<script type="text/javascript" src="~/scripts/signalr-client.min.js"></script>
 <script type="text/javascript">
     var transport = signalR.TransportType.WebSockets;
     var connection = new signalR.HubConnection("http://localhost:60299/draw", { transport: transport });
