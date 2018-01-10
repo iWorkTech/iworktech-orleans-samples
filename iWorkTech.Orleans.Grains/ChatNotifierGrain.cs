@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using iWorkTech.Orleans.Common;
 using iWorkTech.Orleans.Interfaces;
 using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.AspNetCore.SignalR.Internal.Protocol;
 using Microsoft.AspNetCore.Sockets;
 using Orleans;
 using Orleans.Concurrency;
@@ -24,9 +25,7 @@ namespace iWorkTech.Orleans.Grains
             Console.WriteLine("Notify Signalr Server {0} {1} {2}", msg.ChatId, msg.Name,
                 msg.Message);
 
-            //Connection.InvokeAsync("send", message.Name, message.Message, CancellationToken.None);
-            Connection.On<string, string>("broadcastMessage",
-                (name, message) => { Console.WriteLine($"{msg.Name} said: {msg.Message}"); });
+            Connection.InvokeAsync("broadcastMessage", msg.Name, msg.Message, CancellationToken.None);
 
             return Task.CompletedTask;
         }
@@ -35,13 +34,26 @@ namespace iWorkTech.Orleans.Grains
         public Task StartConnectionAsync()
         {
             Connection = new HubConnectionBuilder()
-                //.WithUrl("http://localhost:60299/chat")
-                //.WithConsoleLogger()
+                .WithUrl("http://localhost:60299/chat")
+                .WithConsoleLogger()
                 .WithMessagePackProtocol()
-                //.WithTransport(TransportType.WebSockets)
+                .WithTransport(TransportType.WebSockets)
                 .Build();
 
-            //Connection.InvokeAsync("send", message.Name, message.Message, CancellationToken.None);
+            Console.WriteLine("Starting connection. Press Ctrl-C to close.");
+            var cts = new CancellationTokenSource();
+            Console.CancelKeyPress += (sender, a) =>
+            {
+                a.Cancel = true;
+                cts.Cancel();
+            };
+
+            Connection.Closed += e =>
+            {
+                Console.WriteLine("Connection closed with error: {0}", e);
+                cts.Cancel();
+            };
+
             Connection.On<string, string>("broadcastMessage",
                 (name, message) => { Console.WriteLine($"{name} said: {message}"); });
 

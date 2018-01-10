@@ -5,8 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="1.0.0-alpha2-final" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client.Core" Version="2.1.0-preview1-27884" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Common" Version="2.1.0-preview1-27884" />
+    <PackageReference Include="Microsoft.AspNetCore.Sockets" Version="2.1.0-preview1-27884" />
+    <PackageReference Include="Microsoft.AspNetCore.Sockets.Client.Http" Version="2.1.0-preview1-27884" />
+    <PackageReference Include="Microsoft.AspNetCore.Sockets.Common.Http" Version="2.1.0-preview1-27884" />
+    <PackageReference Include="Microsoft.AspNetCore.Sockets.Http" Version="2.1.0-preview1-27884" />
     <PackageReference Include="Microsoft.Orleans.Core" Version="2.0.0-ci.20180107.1" />
     <PackageReference Include="Microsoft.Orleans.Core.Abstractions" Version="2.0.0-ci.20180107.1" />
     <PackageReference Include="Microsoft.Orleans.OrleansCodeGenerator" Version="2.0.0-ci.20180107.1" />
