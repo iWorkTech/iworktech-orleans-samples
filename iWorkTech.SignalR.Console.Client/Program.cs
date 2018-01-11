@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.AspNetCore.Sockets;
 
 namespace iWorkTech.SignalR.Client
 {
@@ -42,7 +43,27 @@ namespace iWorkTech.SignalR.Client
             Connection = new HubConnectionBuilder()
                 .WithUrl("http://localhost:60299/chat")
                 .WithConsoleLogger()
+                .WithMessagePackProtocol()
+                .WithTransport(TransportType.WebSockets)
                 .Build();
+
+            Console.WriteLine("Starting connection. Press Ctrl-C to close.");
+
+            var cts = new CancellationTokenSource();
+            Console.CancelKeyPress += (sender, a) =>
+            {
+                a.Cancel = true;
+                cts.Cancel();
+            };
+
+            Connection.Closed += e =>
+            {
+                Console.WriteLine("Connection closed with error: {0}", e);
+                cts.Cancel();
+            };
+
+            Connection.On<string, string>("broadcastMessage",
+                (name, message) => { Console.WriteLine($"{name} said: {message}"); });
 
             await Connection.StartAsync();
             Console.WriteLine("Client successfully connected to hub");
@@ -56,7 +77,7 @@ namespace iWorkTech.SignalR.Client
         private static async Task DoClientWork()
         {
             Console.WriteLine("Sending messages to Hub");
-            for (var i = 0; i < 5; i++) await Connection.InvokeAsync("send", "name", i, CancellationToken.None);
+            for (var i = 0; i < 5; i++) await Connection.InvokeAsync("send", "name", i.ToString(), CancellationToken.None);
             Console.WriteLine("Finished sending messages to Hub");
 
         }
