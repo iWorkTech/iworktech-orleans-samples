@@ -16,7 +16,7 @@ namespace iWorkTech.Orleans.Grains
     [StatelessWorker]
     public class ChatNotifierGrain : Grain, IChatNotifierGrain
     {
-        public HubConnection Connection { get; private set; }
+        public static HubConnection Connection { get; private set; }
 
         public Task NotifyMessage(ChatMessage msg)
         {
@@ -25,7 +25,9 @@ namespace iWorkTech.Orleans.Grains
             Console.WriteLine("Notify Signalr Server {0} {1} {2}", msg.ChatId, msg.Name,
                 msg.Message);
 
-            Connection.InvokeAsync("broadcastMessage", msg.Name, msg.Message, CancellationToken.None);
+            Connection.InvokeAsync("send", msg.Name, msg.Message, CancellationToken.None);
+
+            DisposeAsync();
 
             return Task.CompletedTask;
         }
