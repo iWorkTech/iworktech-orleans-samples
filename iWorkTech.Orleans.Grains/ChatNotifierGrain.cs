@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 using iWorkTech.Orleans.Common;
 using iWorkTech.Orleans.Interfaces;
 using Microsoft.AspNetCore.SignalR.Client;
-using Microsoft.AspNetCore.SignalR.Internal.Protocol;
 using Microsoft.AspNetCore.Sockets;
 using Orleans;
 using Orleans.Concurrency;
@@ -25,12 +23,14 @@ namespace iWorkTech.Orleans.Grains
             Console.WriteLine("Notify Signalr Server {0} {1} {2}", msg.ChatId, msg.Name,
                 msg.Message);
 
+
             Connection.InvokeAsync("send", msg.Name, msg.Message, CancellationToken.None);
 
             DisposeAsync();
 
             return Task.CompletedTask;
         }
+
 
 
         public Task StartConnectionAsync()

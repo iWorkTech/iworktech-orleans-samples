@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  iworktech.orleans.web.core.identity:
+    image: iworktechorleanswebcoreidentity
+    build:
+      context: .
+      dockerfile: iWorkTech.Orleans.Web.Core.Identity/Dockerfile
