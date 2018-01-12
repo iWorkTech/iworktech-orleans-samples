@@ -38,12 +38,13 @@ namespace iWorkTech.Orleans.SiloHost
         private static async Task<ISiloHost> StartSilo()
         {
             // define the cluster configuration
-            var siloConfig = ClusterConfiguration.LocalhostPrimarySilo();
-                //.AddSignalR();
+            var siloConfig = ClusterConfiguration.LocalhostPrimarySilo()
+                .AddSignalR();
             siloConfig.AddMemoryStorageProvider();
 
             var silo = new SiloHostBuilder()
                 .UseConfiguration(siloConfig)
+               // .UseSignalR()
                 .ConfigureApplicationParts(parts =>
                     parts.AddApplicationPart(typeof(DeviceGrain).Assembly).WithReferences())
                 .ConfigureApplicationParts(parts =>
