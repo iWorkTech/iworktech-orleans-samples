@@ -19,6 +19,14 @@
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Core" Version="2.1.0-preview1-27884" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="2.1.0-preview1-28033" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="2.1.0-preview1-28033" />
+    <PackageReference Include="Microsoft.Orleans.Client" Version="2.0.0-ci.20180107.1" />
+    <PackageReference Include="Microsoft.Orleans.Core" Version="2.0.0-ci.20180107.1" />
+    <PackageReference Include="Microsoft.Orleans.Core.Abstractions" Version="2.0.0-ci.20180107.1" />
+    <PackageReference Include="Microsoft.Orleans.OrleansCodeGenerator" Version="2.0.0-ci.20180107.1" />
+    <PackageReference Include="Microsoft.Orleans.OrleansCodeGenerator.Build" Version="2.0.0-ci.20180107.1" />
+    <PackageReference Include="Microsoft.Orleans.OrleansRuntime" Version="2.0.0-ci.20180107.1" />
+    <PackageReference Include="Microsoft.Orleans.Server" Version="2.0.0-ci.20180107.1" />
+    <PackageReference Include="SignalR.Orleans" Version="1.0.0-preview-32" />
     <PackageReference Include="System.Reactive.Linq" Version="4.0.0-preview00001" />
   </ItemGroup>
 
