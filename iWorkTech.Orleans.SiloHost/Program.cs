@@ -44,6 +44,7 @@ namespace iWorkTech.Orleans.SiloHost
 
             var silo = new SiloHostBuilder()
                 .UseConfiguration(siloConfig)
+                .UseSignalR()
                 .ConfigureApplicationParts(parts =>
                     parts.AddApplicationPart(typeof(DeviceGrain).Assembly).WithReferences())
                 .ConfigureApplicationParts(parts =>
