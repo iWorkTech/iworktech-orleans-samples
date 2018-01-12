@@ -47,8 +47,8 @@ namespace iWorkTech.Orleans.FakeChatGateway
             while (true)
                 try
                 {
-                    var config = ClientConfiguration.LocalhostSilo()
-                        .AddSignalR(); 
+                    var config = ClientConfiguration.LocalhostSilo();
+                        //.AddSignalR(); 
 
                     client = new ClientBuilder()
                         .UseConfiguration(config)
