@@ -14,7 +14,7 @@ namespace iWorkTech.Orleans.Grains
     [StatelessWorker]
     public class ChatNotifierGrain : Grain, IChatNotifierGrain
     {
-        public static HubConnection Connection { get; private set; }
+        private HubConnection _connection;
 
         public Task NotifyMessage(ChatMessage msg)
         {
@@ -24,7 +24,7 @@ namespace iWorkTech.Orleans.Grains
                 msg.Message);
 
 
-            Connection.InvokeAsync("send", msg.Name, msg.Message, CancellationToken.None);
+            _connection.InvokeAsync("send", msg.Name, msg.Message, CancellationToken.None);
 
             DisposeAsync();
 
@@ -33,8 +33,8 @@ namespace iWorkTech.Orleans.Grains
 
         public Task StartConnectionAsync()
         {
-            if (Connection == null) return Task.CompletedTask;
-            Connection = new HubConnectionBuilder()
+            if (_connection != null) return Task.CompletedTask;
+            _connection = new HubConnectionBuilder()
                 .WithUrl("http://localhost:60299/chat")
                 .WithConsoleLogger()
                 .WithMessagePackProtocol()
@@ -49,21 +49,21 @@ namespace iWorkTech.Orleans.Grains
                 cts.Cancel();
             };
 
-            Connection.Closed += e =>
+            _connection.Closed += e =>
             {
                 Console.WriteLine("Connection closed with error: {0}", e);
                 cts.Cancel();
             };
 
-            Connection.On<string, string>("broadcastMessage",
+            _connection.On<string, string>("broadcastMessage",
                 (name, message) => { Console.WriteLine($"{name} said: {message}"); });
 
-            return Connection.StartAsync();
+            return _connection.StartAsync();
         }
 
         public Task DisposeAsync()
         {
-            return Connection.DisposeAsync();
+            return _connection.DisposeAsync();
         }
     }
 }
