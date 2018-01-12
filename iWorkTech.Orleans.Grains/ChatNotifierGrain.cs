@@ -31,10 +31,9 @@ namespace iWorkTech.Orleans.Grains
             return Task.CompletedTask;
         }
 
-
-
         public Task StartConnectionAsync()
         {
+            if (Connection == null) return Task.CompletedTask;
             Connection = new HubConnectionBuilder()
                 .WithUrl("http://localhost:60299/chat")
                 .WithConsoleLogger()
