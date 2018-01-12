@@ -55,7 +55,6 @@ namespace iWorkTech.Orleans.FakeChatGateway
                         .ConfigureApplicationParts(parts =>
                             parts.AddApplicationPart(typeof(IChatGrain).Assembly).WithReferences())
                         .ConfigureLogging(logging => logging.AddConsole())
-                        .UseSignalR()
                         .Build();
 
                     await client.Connect();
