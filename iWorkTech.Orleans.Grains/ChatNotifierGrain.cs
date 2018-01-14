@@ -26,7 +26,7 @@ namespace iWorkTech.Orleans.Grains
 
             _connection.InvokeAsync("send", msg.Name, msg.Message, CancellationToken.None);
 
-            DisposeAsync();
+            //DisposeAsync();
 
             return Task.CompletedTask;
         }
