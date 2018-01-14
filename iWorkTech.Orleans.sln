@@ -33,6 +33,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iWorkTech.SignalR.Client", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iWorkTech.Orleans.Web.Core.Identity", "iWorkTech.Orleans.Web.Core.Identity\iWorkTech.Orleans.Web.Core.Identity.csproj", "{811CEEE9-0119-4C1D-9905-DBA7B77F2655}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iWorkTech.Orleans.PlayerWatcher", "iWorkTech.Orleans.PlayerWatcher\iWorkTech.Orleans.PlayerWatcher.csproj", "{887F0432-74EB-4D99-A191-F82D5EA647D6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iWorkTech.Orleans.FakePlayerGateway", "iWorkTech.Orleans.FakePlayerGateway\iWorkTech.Orleans.FakePlayerGateway.csproj", "{BA08CE2A-102B-48ED-9443-F7AAA6C50F18}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,6 +91,14 @@ Global
 		{811CEEE9-0119-4C1D-9905-DBA7B77F2655}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{811CEEE9-0119-4C1D-9905-DBA7B77F2655}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{811CEEE9-0119-4C1D-9905-DBA7B77F2655}.Release|Any CPU.Build.0 = Release|Any CPU
+		{887F0432-74EB-4D99-A191-F82D5EA647D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{887F0432-74EB-4D99-A191-F82D5EA647D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{887F0432-74EB-4D99-A191-F82D5EA647D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{887F0432-74EB-4D99-A191-F82D5EA647D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA08CE2A-102B-48ED-9443-F7AAA6C50F18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA08CE2A-102B-48ED-9443-F7AAA6C50F18}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA08CE2A-102B-48ED-9443-F7AAA6C50F18}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA08CE2A-102B-48ED-9443-F7AAA6C50F18}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

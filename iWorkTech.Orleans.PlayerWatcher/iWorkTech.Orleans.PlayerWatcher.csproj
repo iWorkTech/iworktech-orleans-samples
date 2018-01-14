@@ -1,17 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.0</TargetFramework>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="2.1.0-preview1-27884" />
+ 
+ <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="2.1.0-preview1-27884" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client.Core" Version="2.1.0-preview1-27884" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Common" Version="2.1.0-preview1-27884" />
-    <PackageReference Include="Microsoft.AspNetCore.Sockets" Version="2.1.0-preview1-27884" />
-    <PackageReference Include="Microsoft.AspNetCore.Sockets.Client.Http" Version="2.1.0-preview1-27884" />
-    <PackageReference Include="Microsoft.AspNetCore.Sockets.Common.Http" Version="2.1.0-preview1-27884" />
-    <PackageReference Include="Microsoft.AspNetCore.Sockets.Http" Version="2.1.0-preview1-27884" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="2.1.0-preview1-28067" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="2.1.0-preview1-28067" />
+    <PackageReference Include="Microsoft.Orleans.Client" Version="2.0.0-ci.20180111.1" />
     <PackageReference Include="Microsoft.Orleans.Core" Version="2.0.0-ci.20180111.1" />
     <PackageReference Include="Microsoft.Orleans.Core.Abstractions" Version="2.0.0-ci.20180111.1" />
     <PackageReference Include="Microsoft.Orleans.OrleansCodeGenerator" Version="2.0.0-ci.20180111.1" />
@@ -20,9 +20,16 @@
     <PackageReference Include="Microsoft.Orleans.OrleansRuntime" Version="2.0.0-ci.20180111.1" />
     <PackageReference Include="SignalR.Orleans" Version="1.0.0-preview-32" />
   </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\iWorkTech.Orleans.Interfaces\iWorkTech.Orleans.Interfaces.csproj" />
-  </ItemGroup>
+ 
+ <ItemGroup>
+   <ProjectReference Include="..\iWorkTech.Orleans.Common\iWorkTech.Orleans.Common.csproj" />
+   <ProjectReference Include="..\iWorkTech.Orleans.Grains\iWorkTech.Orleans.Grains.csproj" />
+ </ItemGroup>
+ 
+ <ItemGroup>
+   <Reference Include="SignalR.Orleans">
+     <HintPath>C:\Users\ameet\.nuget\packages\signalr.orleans\1.0.0-preview-32\lib\netstandard2.0\SignalR.Orleans.dll</HintPath>
+   </Reference>
+ </ItemGroup>
 
 </Project>
