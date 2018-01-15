@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using iWorkTech.Orleans.Common;
 using Orleans;
 
 namespace iWorkTech.Orleans.Interfaces
@@ -12,10 +14,11 @@ namespace iWorkTech.Orleans.Interfaces
         Task UpdateGameStatus(GameStatus status);
         Task SubscribeForGameUpdates(IGameObserver subscriber);
         Task UnsubscribeForGameUpdates(IGameObserver subscriber);
-    }
-
-    public static class GameConstants
-    {
-        public static Guid NoGame = Guid.Empty;
+        Task<GameState> AddPlayerToGame(Guid player);
+        Task<GameState> GetState();
+        Task<List<GameMove>> GetMoves();
+        Task<GameState> MakeMove(GameMove move);
+        Task<GameSummary> GetSummary(Guid player);
+        Task SetName(string name);
     }
 }

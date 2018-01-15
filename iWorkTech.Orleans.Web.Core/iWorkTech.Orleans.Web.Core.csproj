@@ -36,6 +36,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\iWorkTech.Orleans.Common\iWorkTech.Orleans.Common.csproj" />
+    <ProjectReference Include="..\iWorkTech.Orleans.Interfaces\iWorkTech.Orleans.Interfaces.csproj" />
   </ItemGroup>
 
   <ItemGroup>

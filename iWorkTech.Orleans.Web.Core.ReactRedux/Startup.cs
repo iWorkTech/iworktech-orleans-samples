@@ -1,17 +1,25 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace iWorkTech.Orleans.Web.Core.ReactRedux
 {
     public class Startup
     {
+        private readonly IConfiguration configuration;
+        private readonly IHostingEnvironment env;
+        private readonly ILoggerFactory loggerFactory;
+
+        public Startup(IHostingEnvironment env, IConfiguration configuration, ILoggerFactory loggerFactory)
+        {
+            this.env = env;
+            this.configuration = configuration;
+            this.loggerFactory = loggerFactory;
+        }
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -47,12 +55,12 @@ namespace iWorkTech.Orleans.Web.Core.ReactRedux
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    "default",
+                    "{controller=Home}/{action=Index}/{id?}");
 
                 routes.MapSpaFallbackRoute(
-                    name: "spa-fallback",
-                    defaults: new { controller = "Home", action = "Index" });
+                    "spa-fallback",
+                    new {controller = "Home", action = "Index"});
             });
         }
     }

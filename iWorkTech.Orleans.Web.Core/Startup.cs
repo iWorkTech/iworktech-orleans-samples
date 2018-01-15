@@ -1,8 +1,11 @@
-﻿using iWorkTech.Orleans.Web.Core.Hub;
+﻿using iWorkTech.Orleans.Interfaces;
+using iWorkTech.Orleans.Web.Core.Hub;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Orleans;
+using Orleans.Runtime.Configuration;
 
 namespace iWorkTech.Orleans.Web.Core
 {
@@ -21,7 +24,21 @@ namespace iWorkTech.Orleans.Web.Core
             services.AddMvc();
             services.AddCors();
             services.AddSignalR();
-                //.AddOrleans();
+            //.AddOrleans();
+
+            services.AddSingleton<IGrainFactory>(sp =>
+            {
+                var config = ClientConfiguration.LocalhostSilo()
+                    .AddSignalR();
+                var client = new ClientBuilder()
+                    .UseConfiguration(config)
+                    .ConfigureApplicationParts(parts =>
+                        parts.AddApplicationPart(typeof(IChatGrain).Assembly).WithReferences())
+                    .Build();
+                client.Connect().Wait();
+
+                return client;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -38,6 +55,8 @@ namespace iWorkTech.Orleans.Web.Core
                     routes.MapHub<DrawHub>("/draw");
                     routes.MapHub<StreamingHub>("/streaming");
                 });
+
+                app.ApplicationServices.GetService<IGrainFactory>();
 
                 // Shows UseCors with CorsPolicyBuilder.
                 app.UseCors(builder =>

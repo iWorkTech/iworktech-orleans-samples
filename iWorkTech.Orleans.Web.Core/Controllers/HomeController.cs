@@ -13,7 +13,7 @@ namespace iWorkTech.Orleans.Web.Core.Controllers
 
         public IActionResult Chat()
         {
-            ViewData["Message"] = "Chat Demo using ASP.NET Signalr Core";
+            ViewData["Message"] = "Chat Demo [ASP.NET + SignalR + Orleans] Core";
 
             return View();
         }
@@ -21,14 +21,21 @@ namespace iWorkTech.Orleans.Web.Core.Controllers
 
         public IActionResult Draw()
         {
-            ViewData["Whiteboard"] = "Whiteboard Demo using ASP.NET Signalr Core";
+            ViewData["Whiteboard"] = "Whiteboard Demo [ASP.NET + SignalR + Orleans] Core";
 
             return View();
         }
 
         public IActionResult Streaming()
         {
-            ViewData["Message"] = "Streaming Demo using ASP.NET Signalr Core";
+            ViewData["Message"] = "Streaming Demo [ASP.NET + SignalR + Orleans] Core";
+
+            return View();
+        }
+
+        public IActionResult Game()
+        {
+            ViewData["Message"] = "Game Demo [ASP.NET + SignalR + Orleans] Core";
 
             return View();
         }

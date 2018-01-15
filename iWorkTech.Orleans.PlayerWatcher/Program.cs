@@ -9,7 +9,7 @@ using Orleans.Runtime.Configuration;
 
 namespace iWorkTech.Orleans.PlayerWatcher
 {
-    internal class Program
+    internal partial class Program
     {
         private static int Main(string[] args)
         {
@@ -108,19 +108,6 @@ namespace iWorkTech.Orleans.PlayerWatcher
             {
                 Console.WriteLine("Unexpected Error: {0}", exc.GetBaseException());
                 throw;
-            }
-        }
-
-        /// <summary>
-        ///     Observer class that implements the observer interface. Need to pass a grain reference to an instance of this class
-        ///     to subscribe for updates.
-        /// </summary>
-        internal class GameObserver : IGameObserver
-        {
-            // Receive updates
-            public void UpdateGameScore(string score)
-            {
-                Console.WriteLine("New game score: {0}", score);
             }
         }
     }
