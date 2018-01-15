@@ -232,6 +232,19 @@ namespace iWorkTech.Orleans.Grains
         {
             _subscribers = new ObserverSubscriptionManager<IGameObserver>();
             _players = new HashSet<Guid>();
+
+            // make sure newly formed game is in correct state 
+            ListOfPlayers = new List<Guid>();
+            ListOfMoves = new List<GameMove>();
+            indexNextPlayerToMove = -1; // safety default - is set when game begins to 0 or 1
+            theBoard = new int[3, 3] {{-1, -1, -1}, {-1, -1, -1}, {-1, -1, -1}}; // -1 is empty
+
+            GameState = GameState.AwaitingPlayers;
+            WinnerId = Guid.Empty;
+            LoserId = Guid.Empty;
+
+            gameId = this.GetPrimaryKey();
+
             return Task.CompletedTask;
         }
 
@@ -239,24 +252,19 @@ namespace iWorkTech.Orleans.Grains
         {
             _subscribers.Clear();
             _players.Clear();
-            // make sure newly formed game is in correct state 
-            ListOfPlayers = new List<Guid>();
-            ListOfMoves = new List<GameMove>();
-            indexNextPlayerToMove = -1; // safety default - is set when game begins to 0 or 1
-            theBoard = new[,] {{-1, -1, -1}, {-1, -1, -1}, {-1, -1, -1}}; // -1 is empty
 
-            GameState = GameState.AwaitingPlayers;
-            WinnerId = Guid.Empty;
-            LoserId = Guid.Empty;
-
-            gameId = this.GetPrimaryKey();
             return Task.CompletedTask;
         }
 
         private bool isWinningLine(int i, int j, int k)
         {
-            if (i == 0 && j == 0 && k == 0) return true;
-            if (i == 1 && j == 1 && k == 1) return true;
+            switch (i)
+            {
+                case 0 when j == 0 && k == 0:
+                    return true;
+                case 1 when j == 1 && k == 1:
+                    return true;
+            }
             return false;
         }
     }

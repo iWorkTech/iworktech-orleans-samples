@@ -62,19 +62,27 @@ namespace iWorkTech.Orleans.Grains
             var gameGrain = GrainFactory.GetGrain<IGameGrain>(gameId); // create new game
             Console.WriteLine("New Game {0} was created", gameId);
 
-            // add ourselves to the game
-            var playerId = this.GetPrimaryKey(); // our player id
-            await gameGrain.AddPlayerToGame(playerId);
-            ListOfActiveGames.Add(gameId);
-            var name = username + "'s " + AddOrdinalSuffix(gamesStarted.ToString()) + " game";
-            await gameGrain.SetName(name);
+            try
+            {
+                // add ourselves to the game
+                var playerId = this.GetPrimaryKey(); // our player id
+                await gameGrain.AddPlayerToGame(playerId);
+                ListOfActiveGames.Add(gameId);
+                var name = username + "'s " + AddOrdinalSuffix(gamesStarted.ToString()) + " game";
+                await gameGrain.SetName(name);
 
-            var pairingGrain = GrainFactory.GetGrain<IPairingGrain>(0);
-            await pairingGrain.AddGame(gameId, name);
+                var pairingGrain = GrainFactory.GetGrain<IPairingGrain>(0);
+                await pairingGrain.AddGame(gameId, name);
 
-            Console.WriteLine("Returning Game ID : {0} ", gameId);
+                Console.WriteLine("Returning Game ID : {0} ", gameId);
 
-            return gameId;
+                return gameId;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
 
