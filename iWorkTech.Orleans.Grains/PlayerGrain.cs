@@ -46,6 +46,8 @@ namespace iWorkTech.Orleans.Grains
         public async Task<PairingSummary[]> GetAvailableGames()
         {
             var grain = GrainFactory.GetGrain<IPairingGrain>(0);
+            Console.WriteLine("GetAvailableGames was called");
+
             return (await grain.GetGames()).Where(x => !ListOfActiveGames.Contains(x.GameId)).ToArray();
         }
 
@@ -53,9 +55,12 @@ namespace iWorkTech.Orleans.Grains
         public async Task<Guid> CreateGame()
         {
             gamesStarted += 1;
+            Console.WriteLine("CreateGame was called");
 
             var gameId = Guid.NewGuid();
+
             var gameGrain = GrainFactory.GetGrain<IGameGrain>(gameId); // create new game
+            Console.WriteLine("New Game {0} was created", gameId);
 
             // add ourselves to the game
             var playerId = this.GetPrimaryKey(); // our player id
@@ -66,6 +71,8 @@ namespace iWorkTech.Orleans.Grains
 
             var pairingGrain = GrainFactory.GetGrain<IPairingGrain>(0);
             await pairingGrain.AddGame(gameId, name);
+
+            Console.WriteLine("Returning Game ID : {0} ", gameId);
 
             return gameId;
         }

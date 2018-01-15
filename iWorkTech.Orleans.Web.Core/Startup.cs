@@ -33,7 +33,7 @@ namespace iWorkTech.Orleans.Web.Core
                 var client = new ClientBuilder()
                     .UseConfiguration(config)
                     .ConfigureApplicationParts(parts =>
-                        parts.AddApplicationPart(typeof(IChatGrain).Assembly).WithReferences())
+                        parts.AddApplicationPart(typeof(IPlayerGrain).Assembly).WithReferences())
                     .Build();
                 client.Connect().Wait();
 
