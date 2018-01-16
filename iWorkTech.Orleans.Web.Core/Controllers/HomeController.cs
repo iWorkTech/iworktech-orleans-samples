@@ -37,14 +37,6 @@ namespace iWorkTech.Orleans.Web.Core.Controllers
             return View();
         }
  
-        public IActionResult Game()
-        {
-            ViewData["Message"] = "Games Demo [ASP.NET + SignalR + Orleans] Core";
-
-            return View();
-        }
-
-
     }
 
 }
