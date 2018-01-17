@@ -1,11 +1,9 @@
 ﻿@{
-    ViewData["Title"] = "Game Demo";
+    ViewData["Title"] = "Games Demo";
 }
 <h2>@ViewData["Title"]</h2>
 <h3>@ViewData["Message"]</h3>
-
 <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.0.0/handlebars.min.js" type="text/javascript"></script>
-
 <div class="container">
     <style>
         .container {
@@ -13,42 +11,47 @@
         }
 
         .cell {
-            width: 100px;
             height: 100px;
             text-align: center;
+            width: 100px;
         }
     </style>
-    <script>
-        var gameId = '@Model.GameId';
-        if (gameId) {
+</div>
 
-        }
+<div id="games-placeholder" class="container">
+    
+</div>
+<div id="board-placeholder" class="container" style="display: none">
 
-        var oxo = {
-            rand: function () {
-                return "?r=" + Math.random();
+</div>
+<script>
+    var oxo = {
+        rand: function () {
+            return "?r=" + Math.random();
+        },
+
+        model: {
+            currentGame: "",
+            gameList: [],
+            name: "New User"
+        },
+
+        ajax: {
+            createGame: function (cb) {
+                $.post("/Game/CreateGame", cb);
             },
 
-            model: {
-                currentGame: "",
-                gameList: [],
-                name: "New User"
-            },
-
-            ajax: {
-                createGame: function (cb) {
-                    $.post("/Game/CreateGame", cb);
-                },
-
-                placeMove: function (coords, cb) {
-                    $.post("/Game/", function (data) {
+            placeMove: function (coords, cb) {
+                $.post("/Game/",
+                    function (data) {
                         if (cb) {
                             cb(data);
                         }
                     });
-                },
-                getGames: function (cb) {
-                    $.get("/Game/Index/" + oxo.rand(), function (data) {
+            },
+            getGames: function (cb) {
+                $.get("/Game/Index/" + oxo.rand(),
+                    function (data) {
                         if (data) {
                             // games playing
                             data[0].forEach(function (x) {
@@ -57,155 +60,148 @@
                         }
                         cb({ currentGames: data[0], availableGames: data[1] });
                     });
-                },
-                getMoves: function (cb) {
-                    $.get("/Game/GetMoves/" + oxo.model.currentGame + oxo.rand(), cb);
-                },
-                makeMove: function (x, y, cb) {
-                    $.post("/Game/MakeMove/" + oxo.model.currentGame + "/?x=" + x + "&y=" + y, cb);
-                },
-                joinGame: function (gameId, cb) {
-                    $.post("/Game/Join/" + gameId, function (data) {
+            },
+            getMoves: function (cb) {
+                $.get("/Game/GetMoves/" + oxo.model.currentGame + oxo.rand(), cb);
+            },
+            makeMove: function (x, y, cb) {
+                $.post("/Game/MakeMove/" + oxo.model.currentGame + "/?x=" + x + "&y=" + y, cb);
+            },
+            joinGame: function (gameId, cb) {
+                $.post("/Game/Join/" + gameId,
+                    function (data) {
                         // check we have joined
                         oxo.model.currentGame = gameId;
                         cb(data);
                     });
-                },
-                setName: function (name, cb) {
-                    $.post("/Game/SetUser/" + name, function (data) {
+            },
+            setName: function (name, cb) {
+                $.post("/Game/SetUser/" + name,
+                    function (data) {
                         if (cb) {
                             cb(data);
                         }
                     });
+            }
+        },
+
+        controllers: {
+            refreshGamesList: function () {
+                oxo.ajax.getGames(oxo.ui.renderGameList);
+            },
+            refreshBoard: function () {
+                if (oxo.model.currentGame) {
+                    oxo.ajax.getMoves(function (data) {
+                        oxo.ui.renderBoard(data);
+                    });
                 }
             },
-
-            controllers: {
-                refreshGamesList: function () {
-                    oxo.ajax.getGames(oxo.ui.renderGameList);
-                },
-                refreshBoard: function () {
-                    if (oxo.model.currentGame) {
-                        oxo.ajax.getMoves(function (data) {
-                            oxo.ui.renderBoard(data);
-                        });
-                    }
-                },
-                play: function (gameId) {
-                    oxo.model.currentGame = gameId;
-                    oxo.controllers.refreshBoard();
-                    $("#board-placeholder").show("fast");
-                    $("#games-placeholder").hide("fast");
-                },
-                move: function (x, y) {
-                    oxo.ajax.makeMove(x, y, function () {
+            play: function (gameId) {
+                oxo.model.currentGame = gameId;
+                oxo.controllers.refreshBoard();
+                $("#board-placeholder").show("fast");
+                $("#games-placeholder").hide("fast");
+            },
+            move: function (x, y) {
+                oxo.ajax.makeMove(x,
+                    y,
+                    function () {
                         oxo.controllers.refreshBoard();
                         oxo.controllers.refreshGamesList();
                     });
-                },
-                createGame: function () {
-                    oxo.ajax.createGame(oxo.controllers.refreshGamesList);
-                },
-                showJoinDialog: function () {
-                    $("#join-game-modal").modal();
-                },
-                joinGame: function () {
-                    var gameId = $("#join-game-input").val().trim();
-                    if (!gameId) return;
-                    $("#join-game-modal").modal('hide');
-                    oxo.ajax.joinGame(gameId, function (data) {
+            },
+            createGame: function () {
+                oxo.ajax.createGame(oxo.controllers.refreshGamesList);
+            },
+            showJoinDialog: function () {
+                $("#join-game-modal").modal();
+            },
+            joinGame: function () {
+                var gameId = $("#join-game-input").val().trim();
+                if (!gameId) return;
+                $("#join-game-modal").modal('hide');
+                oxo.ajax.joinGame(gameId,
+                    function (data) {
                         $("#join-game-input").val("");
                         oxo.controllers.refreshGamesList();
                     });
-                },
-                joinThisGame: function (gameId) {
-                    if (!gameId) return;
-                    oxo.ajax.joinGame(gameId, function (data) {
-                        oxo.controllers.refreshGamesList();
-                    });
-                },
-                enterName: function () {
-                    var name = $("#enter-name-input").val().trim();
-                    if (!name) return;
-                    oxo.model.name = name;
-                    $("#enter-name-modal").modal('hide');
-                    oxo.ajax.setName(name, function () {
-                        $("#enter-name-input").val("")
-                        oxo.controllers.refreshGamesList();
-                    });
-                },
-                showInvite: function (gameId) {
-                    $("#invite-game-id").val(gameId);
-                    $("#invite-game-link").val(window.location.origin + "/Home/Join/" + gameId);
-                    $("#invite-game-modal").modal();
-                },
-                showGames: function () {
-                    $("#board-placeholder").hide("fast");
-                    $("#games-placeholder").show("fast");
-                }
-
             },
-
-            ui: {
-
-                renderGameList: function (data) {
-                    var template = Handlebars.compile($("#games-template").html());
-                    $("#games-placeholder").html(template(data));
-                },
-                renderBoard: function (data) {
-                    var template = Handlebars.compile($("#board-template").html());
-                    var board = {};
-                    if (data.summary.YourMove) {
-                        for (var x = 0; x < 3; x++)
-                            for (var y = 0; y < 3; y++)
-                                board["x" + x + "y" + y] = '<a href="javascript:void(0);" onclick="oxo.controllers.move(' + x + ', ' + y + ');">MOVE</a>'
-                    }
-                    var useO = true;
-                    data.moves.forEach(function (move) {
-                        board["x" + move.X + "y" + move.Y] = useO ? "O" : "X";
-                        useO = !useO;
+            joinThisGame: function (gameId) {
+                if (!gameId) return;
+                oxo.ajax.joinGame(gameId,
+                    function (data) {
+                        oxo.controllers.refreshGamesList();
                     });
-                    data.board = board;
-                    $("#board-placeholder").html(template(data));
+            },
+            enterName: function () {
+                var name = $("#enter-name-input").val().trim();
+                if (!name) return;
+                oxo.model.name = name;
+                $("#enter-name-modal").modal('hide');
+                oxo.ajax.setName(name,
+                    function () {
+                        $("#enter-name-input").val("");
+                        oxo.controllers.refreshGamesList();
+                    });
+            },
+            showInvite: function (gameId) {
+                $("#invite-game-id").val(gameId);
+                $("#invite-game-link").val(window.location.origin + "/Home/Join/" + gameId);
+                $("#invite-game-modal").modal();
+            },
+            showGames: function () {
+                $("#board-placeholder").hide("fast");
+                $("#games-placeholder").show("fast");
+            }
+
+        },
+
+        ui: {
+            renderGameList: function (data) {
+                var template = Handlebars.compile($("#games-template").html());
+                $("#games-placeholder").html(template(data));
+            },
+            renderBoard: function (data) {
+                var template = Handlebars.compile($("#board-template").html());
+                var board = {};
+                if (data.summary.YourMove) {
+                    for (var x = 0; x < 3; x++)
+                        for (var y = 0; y < 3; y++)
+                            board["x" + x + "y" + y] =
+                                '<a href="javascript:void(0);" onclick="oxo.controllers.move(' +
+                                x +
+                                ', ' +
+                                y +
+                                ');">MOVE</a>';
                 }
+                var useO = true;
+                data.moves.forEach(function (move) {
+                    board["x" + move.X + "y" + move.Y] = useO ? "O" : "X";
+                    useO = !useO;
+                });
+                data.board = board;
+                $("#board-placeholder").html(template(data));
             }
         }
-
-
-        $(document).ready(function () {
-            $("#joinConfirmButton").bind('click', oxo.controllers.joinGame);
-            $("#enterNameOk").bind('click', oxo.controllers.enterName);
-            $("enter-name-input").keyup(function (event) {
-                if (event.keyCode == 13) {
-                    $("#enterNameOk").click();
-                }
-            });
-
-            $("#enter-name-modal").modal({
-                backdrop: 'static',
-                keyboard: false
-            });
-
-            setInterval(oxo.controllers.refreshGamesList, 5 * 1000);
-            setInterval(oxo.controllers.refreshBoard, 5 * 1000);
+    };
+    $(document).ready(function () {
+        $("#joinConfirmButton").bind('click', oxo.controllers.joinGame);
+        $("#enterNameOk").bind('click', oxo.controllers.enterName);
+        $("enter-name-input").keyup(function (event) {
+            if (event.keyCode == 13) {
+                $("#enterNameOk").click();
+            }
         });
 
-    </script>
-   
-</div>
-<div class="container jumbotron">
-    <h1>Tic-Tac-Toe</h1>
-</div>
-<div class="container">
+        $("#enter-name-modal").modal({
+            backdrop: 'static',
+            keyboard: false
+        });
 
-</div>
-<div id="games-placeholder" class="container">
-
-</div>
-<div id="board-placeholder" class="container" style="display:none">
-
-</div>
-
+        setInterval(oxo.controllers.refreshGamesList, 5 * 1000);
+        setInterval(oxo.controllers.refreshBoard, 5 * 1000);
+    });
+</script>
 
 <script id="board-template" type="text/x-handlebars-template">
     <a href="javascript:void(0);" style="margin-top:8px;margin-bottom:8px" onclick="oxo.controllers.showGames();">&larr; Back to game list</a>
@@ -225,7 +221,6 @@
         <tr><td class="cell">{{{board.x0y2}}}</td><td class="cell">{{{board.x1y2}}}</td><td class="cell">{{{board.x2y2}}}</td></tr>
     </table>
 </script>
-
 <script id="games-template" type="text/x-handlebars-template">
     <h3>Your Games</h3>
     <ul style="margin-bottom:25px">
@@ -290,7 +285,7 @@
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
+</div>
 <div class="modal fade" id="join-game-modal">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -310,7 +305,7 @@
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
+</div>
 <div class="modal fade" id="invite-game-modal">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -329,6 +324,6 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-success" data-dismiss="modal">OK</button>
             </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
+        </div>
+    </div>
+</div>
