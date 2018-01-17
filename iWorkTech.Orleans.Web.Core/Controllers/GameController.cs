@@ -25,18 +25,18 @@ namespace iWorkTech.Orleans.Web.Core.Controllers
             return guid;
         }
 
-        public async Task<ActionResult> Index()
+        public async Task<IActionResult> Index()
         {
             var guid = GetGuid();
             var player = _factory.GetGrain<IPlayerGrain>(guid);
             var gamesTask = player.GetGameSummaries();
             var availableTask = player.GetAvailableGames();
-            await Task.WhenAll(gamesTask, availableTask);
+            await Task.WhenAny(gamesTask, availableTask);
 
             return Json(new object[] {gamesTask.Result, availableTask.Result});
         }
 
-        public async Task<ActionResult> CreateGame()
+        public async Task<IActionResult> CreateGame()
         {
             var guid = GetGuid();
             var player = _factory.GetGrain<IPlayerGrain>(guid);
@@ -44,7 +44,7 @@ namespace iWorkTech.Orleans.Web.Core.Controllers
             return Json(new {GameId = gameIdTask});
         }
 
-        public async Task<ActionResult> Join(Guid id)
+        public async Task<IActionResult> Join(Guid id)
         {
             var guid = GetGuid();
             var player = _factory.GetGrain<IPlayerGrain>(guid);
@@ -52,7 +52,7 @@ namespace iWorkTech.Orleans.Web.Core.Controllers
             return Json(new {GameState = state});
         }
 
-        public async Task<ActionResult> GetMoves(Guid id)
+        public async Task<IActionResult> GetMoves(Guid id)
         {
             var guid = GetGuid();
             var game = _factory.GetGrain<IGameGrain>(id);
@@ -62,7 +62,7 @@ namespace iWorkTech.Orleans.Web.Core.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> MakeMove(Guid id, int x, int y)
+        public async Task<IActionResult> MakeMove(Guid id, int x, int y)
         {
             var guid = GetGuid();
             var game = _factory.GetGrain<IGameGrain>(id);
@@ -71,7 +71,7 @@ namespace iWorkTech.Orleans.Web.Core.Controllers
             return Json(state);
         }
 
-        public async Task<ActionResult> QueryGame(Guid id)
+        public async Task<IActionResult> QueryGame(Guid id)
         {
             var game = _factory.GetGrain<IGameGrain>(id);
             var state = await game.GetState();
@@ -79,7 +79,7 @@ namespace iWorkTech.Orleans.Web.Core.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> SetUser(string id)
+        public async Task<IActionResult> SetUser(string id)
         {
             var guid = GetGuid();
             var player = _factory.GetGrain<IPlayerGrain>(guid);

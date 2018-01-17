@@ -38,7 +38,7 @@ namespace iWorkTech.Orleans.Web.Core.Controllers
             return guid;
         }
 
-        public async Task<ActionResult> Join(Guid id)
+        public async Task<IActionResult> Join(Guid id)
         {
             var guid = GetGuid();
             var player = _factory.GetGrain<IPlayerGrain>(guid);

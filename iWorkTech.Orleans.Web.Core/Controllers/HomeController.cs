@@ -1,11 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using System.Threading.Tasks;
-using iWorkTech.Orleans.Interfaces;
-using iWorkTech.Orleans.Web.Core.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Orleans;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace iWorkTech.Orleans.Web.Core.Controllers
 {
@@ -25,7 +18,7 @@ namespace iWorkTech.Orleans.Web.Core.Controllers
 
         public IActionResult Draw()
         {
-            ViewData["Whiteboard"] = "Whiteboard Demo [ASP.NET + SignalR + Orleans] Core";
+            ViewData["Message"] = "Whiteboard Demo [ASP.NET + SignalR + Orleans] Core";
 
             return View();
         }
@@ -36,7 +29,5 @@ namespace iWorkTech.Orleans.Web.Core.Controllers
 
             return View();
         }
- 
     }
-
 }
