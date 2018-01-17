@@ -116,7 +116,7 @@ namespace iWorkTech.Orleans.FakeDeviceGateway
         {
             // simulate 20 devices
             var devices = new List<Model>();
-            for (var i = 0; i < 20; i++)
+            for (var i = 0; i < 2; i++)
                 devices.Add(new Model
                 {
                     DeviceId = i,
@@ -126,7 +126,7 @@ namespace iWorkTech.Orleans.FakeDeviceGateway
                     Speed = Rand.NextDouble(0, 0.0005)
                 });
 
-            var timer = new System.Timers.Timer { Interval = 1000 };
+            var timer = new System.Timers.Timer { Interval = 10000 };
             timer.Elapsed += (s, e) =>
             {
                 Console.Write(". ");

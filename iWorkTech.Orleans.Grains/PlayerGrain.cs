@@ -13,24 +13,24 @@ namespace iWorkTech.Orleans.Grains
     /// </summary>
     public class PlayerGrain : Grain, IPlayerGrain
     {
-        private IGameGrain currentGame;
-        private int gamesStarted;
-        private int loses;
-        private string username;
-        private int wins;
+        private IGameGrain _currentGame;
+        private int _gamesStarted;
+        private int _loses;
+        private string _username;
+        private int _wins;
         private List<Guid> ListOfActiveGames { get; set; }
         private List<Guid> ListOfPastGames { get; set; }
 
         // Game the player is currently in. May be null.
         public Task<IGameGrain> GetCurrentGame()
         {
-            return Task.FromResult(currentGame);
+            return Task.FromResult(_currentGame);
         }
 
         // Game grain calls this method to notify that the player has joined the game.
         public Task JoinGame(IGameGrain game)
         {
-            currentGame = game;
+            _currentGame = game;
             Console.WriteLine("Player {0} joined game {1}", this.GetPrimaryKey(), game.GetPrimaryKey());
             return Task.CompletedTask;
         }
@@ -38,7 +38,7 @@ namespace iWorkTech.Orleans.Grains
         // Game grain calls this method to notify that the player has left the game.
         public Task LeaveGame(IGameGrain game)
         {
-            currentGame = null;
+            _currentGame = null;
             Console.WriteLine("Player {0} left game {1}", this.GetPrimaryKey(), game.GetPrimaryKey());
             return Task.CompletedTask;
         }
@@ -54,7 +54,7 @@ namespace iWorkTech.Orleans.Grains
         // create a new game, and add oursleves to that game
         public async Task<Guid> CreateGame()
         {
-            gamesStarted += 1;
+            _gamesStarted += 1;
             Console.WriteLine("CreateGame was called");
 
             var gameId = Guid.NewGuid();
@@ -68,7 +68,7 @@ namespace iWorkTech.Orleans.Grains
                 var playerId = this.GetPrimaryKey(); // our player id
                 await gameGrain.AddPlayerToGame(playerId);
                 ListOfActiveGames.Add(gameId);
-                var name = username + "'s " + AddOrdinalSuffix(gamesStarted.ToString()) + " game";
+                var name = _username + "'s " + AddOrdinalSuffix(_gamesStarted.ToString()) + " game";
                 await gameGrain.SetName(name);
 
                 var pairingGrain = GrainFactory.GetGrain<IPairingGrain>(0);
@@ -112,9 +112,9 @@ namespace iWorkTech.Orleans.Grains
             // manage running total
 
             if (outcome == GameOutcome.Win)
-                wins++;
+                _wins++;
             if (outcome == GameOutcome.Lose)
-                loses++;
+                _loses++;
 
             return Task.CompletedTask;
         }
@@ -127,30 +127,31 @@ namespace iWorkTech.Orleans.Grains
                 var game = GrainFactory.GetGrain<IGameGrain>(gameId);
                 tasks.Add(game.GetSummary(this.GetPrimaryKey()));
             }
+
             await Task.WhenAll(tasks);
             return tasks.Select(x => x.Result).ToList();
         }
 
         public Task SetUsername(string name)
         {
-            username = name;
+            _username = name;
             return Task.CompletedTask;
         }
 
         public Task<string> GetUsername()
         {
-            return Task.FromResult(username);
+            return Task.FromResult(_username);
         }
 
         public override Task OnActivateAsync()
         {
-            currentGame = null;
+            _currentGame = null;
             ListOfActiveGames = new List<Guid>();
             ListOfPastGames = new List<Guid>();
 
-            wins = 0;
-            loses = 0;
-            gamesStarted = 0;
+            _wins = 0;
+            _loses = 0;
+            _gamesStarted = 0;
 
             return Task.CompletedTask;
         }

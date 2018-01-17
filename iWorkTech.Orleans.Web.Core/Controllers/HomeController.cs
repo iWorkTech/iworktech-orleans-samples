@@ -50,8 +50,6 @@ namespace iWorkTech.Orleans.Web.Core.Controllers
             ViewData["Message"] = "Game Demo [ASP.NET + SignalR + Orleans] Core";
             var vm = new ViewModel { GameId = (id.HasValue) ? id.Value.ToString() : "" };
             return View(vm);
-
-            return View();
         }
 
         public IActionResult Error()

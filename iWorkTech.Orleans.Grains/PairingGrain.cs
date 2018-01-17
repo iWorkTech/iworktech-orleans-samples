@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using iWorkTech.Orleans.Common;
 using iWorkTech.Orleans.Interfaces;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.DependencyInjection;
 using Orleans;
 using Orleans.Concurrency;
 
@@ -40,11 +41,12 @@ namespace iWorkTech.Orleans.Grains
 
         public override Task OnActivateAsync()
         {
-            //var provider = new ServiceCollection()
-            //    .AddMemoryCache()
-            //    .BuildServiceProvider();
+            var provider = new ServiceCollection()
+                .AddMemoryCache()
+                .BuildServiceProvider();
 
-            //provider.GetService<IMemoryCache>();
+            provider.GetService<IMemoryCache>();
+
             _cache = new MemoryCache(new MemoryCacheOptions());
             _games = new Dictionary<Guid, string>();
             _cache.CreateEntry(CacheKeys.Games);
