@@ -149,14 +149,14 @@ namespace iWorkTech.Orleans.Grains
             // check for a winning move
             var win = false;
             for (var i = 0; i < 3 && !win; i++)
-                win = isWinningLine(theBoard[i, 0], theBoard[i, 1], theBoard[i, 2]);
+                win = IsWinningLine(theBoard[i, 0], theBoard[i, 1], theBoard[i, 2]);
             if (!win)
                 for (var i = 0; i < 3 && !win; i++)
-                    win = isWinningLine(theBoard[0, i], theBoard[1, i], theBoard[2, i]);
+                    win = IsWinningLine(theBoard[0, i], theBoard[1, i], theBoard[2, i]);
             if (!win)
-                win = isWinningLine(theBoard[0, 0], theBoard[1, 1], theBoard[2, 2]);
+                win = IsWinningLine(theBoard[0, 0], theBoard[1, 1], theBoard[2, 2]);
             if (!win)
-                win = isWinningLine(theBoard[0, 2], theBoard[1, 1], theBoard[2, 0]);
+                win = IsWinningLine(theBoard[0, 2], theBoard[1, 1], theBoard[2, 0]);
 
             // check for draw
 
@@ -204,9 +204,7 @@ namespace iWorkTech.Orleans.Grains
 
         public async Task<GameSummary> GetSummary(Guid player)
         {
-            var promises = new List<Task<string>>();
-            foreach (var p in ListOfPlayers.Where(p => p != player))
-                promises.Add(GrainFactory.GetGrain<IPlayerGrain>(p).GetUsername());
+            var promises = ListOfPlayers.Where(p => p != player).Select(p => GrainFactory.GetGrain<IPlayerGrain>(p).GetUsername()).ToList();
             await Task.WhenAll(promises);
 
             return new GameSummary
@@ -256,7 +254,7 @@ namespace iWorkTech.Orleans.Grains
             return Task.CompletedTask;
         }
 
-        private bool isWinningLine(int i, int j, int k)
+        private bool IsWinningLine(int i, int j, int k)
         {
             switch (i)
             {

@@ -111,10 +111,15 @@ namespace iWorkTech.Orleans.Grains
 
             // manage running total
 
-            if (outcome == GameOutcome.Win)
-                wins++;
-            if (outcome == GameOutcome.Lose)
-                loses++;
+            switch (outcome)
+            {
+                case GameOutcome.Win:
+                    wins++;
+                    break;
+                case GameOutcome.Lose:
+                    loses++;
+                    break;
+            }
 
             return Task.CompletedTask;
         }
