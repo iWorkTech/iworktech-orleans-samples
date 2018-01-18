@@ -15,7 +15,7 @@ namespace iWorkTech.Orleans.Grains
 
         public async Task BecomeConsumer(Guid streamId, string streamNamespace, string providerToUse)
         {
-            Console.WriteLine("BecomeConsumer");
+            Console.WriteLine("StreamingConsumerGrain - BecomeConsumer " + IdentityString);
             _consumerObserver = new ConsumerObserver<int>(this);
             var streamProvider = GetStreamProvider(providerToUse);
             _consumer = streamProvider.GetStream<int>(streamId, streamNamespace);
@@ -24,7 +24,7 @@ namespace iWorkTech.Orleans.Grains
 
         public async Task StopConsuming()
         {
-            Console.WriteLine("StopConsuming");
+            Console.WriteLine("StreamingConsumerGrain - StopConsuming " + IdentityString);
             if (_consumerHandle != null)
             {
                 await _consumerHandle.UnsubscribeAsync();
@@ -39,8 +39,7 @@ namespace iWorkTech.Orleans.Grains
 
         public override Task OnActivateAsync()
         {
-            Console.WriteLine("SampleStreaming_ConsumerGrain " + IdentityString);
-            Console.WriteLine("OnActivateAsync");
+            Console.WriteLine("StreamingConsumerGrain - OnActivateAsync " + IdentityString);
             NumConsumedItems = 0;
             _consumerHandle = null;
             return Task.CompletedTask;
@@ -48,7 +47,7 @@ namespace iWorkTech.Orleans.Grains
 
         public override Task OnDeactivateAsync()
         {
-            Console.WriteLine("OnDeactivateAsync");
+            Console.WriteLine("StreamingConsumerGrain - OnDeactivateAsync " + IdentityString);
             return Task.CompletedTask;
         }
     }

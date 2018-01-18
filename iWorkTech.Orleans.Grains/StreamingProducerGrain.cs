@@ -10,44 +10,46 @@ namespace iWorkTech.Orleans.Grains
 {
     public class StreamingProducerGrain : Grain, IStreamingProducerGrain
     {
-        internal static readonly string RequestContextKey = "RequestContextField";
-        internal static readonly string RequestContextValue = "JustAString";
-        private int numProducedItems;
-        private IAsyncStream<int> producer;
-        private IDisposable producerTimer;
+        internal static readonly string REQUEST_CONTEXT_KEY = "RequestContextField";
+        internal static readonly string REQUEST_CONTEXT_VALUE = "JustAString";
+        private int _numProducedItems;
+        private IAsyncStream<int> _producer;
+        private IDisposable _producerTimer;
 
         public Task BecomeProducer(Guid streamId, string streamNamespace, string providerToUse)
         {
-            Console.WriteLine("BecomeProducer");
+            Console.WriteLine("StreamingProducerGrain - BecomeProducer " + IdentityString);
             var streamProvider = GetStreamProvider(providerToUse);
-            producer = streamProvider.GetStream<int>(streamId, streamNamespace);
+            _producer = streamProvider.GetStream<int>(streamId, streamNamespace);
             return Task.CompletedTask;
         }
 
         public Task StartPeriodicProducing()
         {
-            Console.WriteLine("StartPeriodicProducing");
-            producerTimer = RegisterTimer(TimerCallback, null, TimeSpan.Zero, TimeSpan.FromMilliseconds(10));
+            Console.WriteLine("StreamingProducerGrain - StartPeriodicProducing " + IdentityString);
+            _producerTimer = RegisterTimer(TimerCallback, null, TimeSpan.Zero, TimeSpan.FromMilliseconds(10));
             return Task.CompletedTask;
         }
 
         public Task StopPeriodicProducing()
         {
-            Console.WriteLine("StopPeriodicProducing");
-            producerTimer.Dispose();
-            producerTimer = null;
+            Console.WriteLine("StopPeriodicProducing - GetNumberProduced " + IdentityString);
+            _producerTimer.Dispose();
+            _producerTimer = null;
             return Task.CompletedTask;
         }
 
         public Task<int> GetNumberProduced()
         {
-            Console.WriteLine("GetNumberProduced {0}", numProducedItems);
-            return Task.FromResult(numProducedItems);
+            Console.WriteLine("StreamingProducerGrain - GetNumberProduced " + IdentityString);
+            Console.WriteLine("GetNumberProduced {0}", _numProducedItems);
+            return Task.FromResult(_numProducedItems);
         }
 
         public Task ClearNumberProduced()
         {
-            numProducedItems = 0;
+            _numProducedItems = 0;
+            Console.WriteLine("StreamingProducerGrain - ClearNumberProduced " + IdentityString);
             return Task.CompletedTask;
         }
 
@@ -58,28 +60,29 @@ namespace iWorkTech.Orleans.Grains
 
         public override Task OnActivateAsync()
         {
-            Console.WriteLine("SampleStreaming_ProducerGrain " + IdentityString);
-            Console.WriteLine("OnActivateAsync");
-            numProducedItems = 0;
+            Console.WriteLine("StreamingProducerGrain - OnActivateAsync " + IdentityString);
+            _numProducedItems = 0;
             return Task.CompletedTask;
         }
 
         private Task TimerCallback(object state)
         {
-            return producerTimer != null ? Fire() : Task.CompletedTask;
+            Console.WriteLine("StreamingProducerGrain - TimerCallback " + IdentityString);
+            return _producerTimer != null ? Fire() : Task.CompletedTask;
         }
 
         private async Task Fire([CallerMemberName] string caller = null)
         {
-            RequestContext.Set(RequestContextKey, RequestContextValue);
-            await producer.OnNextAsync(numProducedItems);
-            numProducedItems++;
-            Console.WriteLine("{0} (item={1})", caller, numProducedItems);
+            RequestContext.Set(REQUEST_CONTEXT_KEY, REQUEST_CONTEXT_VALUE);
+            await _producer.OnNextAsync(_numProducedItems);
+            _numProducedItems++;
+            Console.WriteLine("StreamingProducerGrain - Fire " + IdentityString);
+            Console.WriteLine("{0} (item={1})", caller, _numProducedItems);
         }
 
         public override Task OnDeactivateAsync()
         {
-            Console.WriteLine("OnDeactivateAsync");
+            Console.WriteLine("StreamingProducerGrain - OnActivateAsync " + IdentityString);
             return Task.CompletedTask;
         }
     }
