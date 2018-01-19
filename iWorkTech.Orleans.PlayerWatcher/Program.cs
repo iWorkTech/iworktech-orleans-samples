@@ -70,7 +70,7 @@ namespace iWorkTech.Orleans.PlayerWatcher
             return client;
         }
 
-        private static async Task DoClientWork(IClusterClient client)
+        private static async Task DoClientWork(IGrainFactory client)
         {
             try
             {
