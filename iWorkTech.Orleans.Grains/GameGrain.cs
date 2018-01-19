@@ -263,6 +263,7 @@ namespace iWorkTech.Orleans.Grains
                 case 1 when j == 1 && k == 1:
                     return true;
             }
+
             return false;
         }
     }

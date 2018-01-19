@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using iWorkTech.Orleans.Common;
 using iWorkTech.Orleans.Interfaces;
-using Microsoft.Extensions.Logging;
 using Orleans;
 using Orleans.Concurrency;
 
@@ -18,7 +17,6 @@ namespace iWorkTech.Orleans.Grains
 
         public async Task ProcessMessage(DeviceMessage message)
         {
-
             if (null == LastMessage || LastMessage.Latitude != message.Latitude ||
                 LastMessage.Longitude != message.Longitude)
             {
@@ -39,7 +37,8 @@ namespace iWorkTech.Orleans.Grains
                 LastMessage = message;
             }
 
-            Console.WriteLine($"Device message received: Lat:{0} :: Lon:{1} :: DeviceId:{2}", LastMessage.Latitude, LastMessage.Longitude, message.DeviceId);
+            Console.WriteLine($"Device message received: Lat:{0} :: Lon:{1} :: DeviceId:{2}", LastMessage.Latitude,
+                LastMessage.Longitude, message.DeviceId);
         }
 
         private static double GetSpeed(DeviceMessage message1, DeviceMessage message2)

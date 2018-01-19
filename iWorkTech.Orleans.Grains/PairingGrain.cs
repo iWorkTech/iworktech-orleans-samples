@@ -46,6 +46,7 @@ namespace iWorkTech.Orleans.Grains
                 .BuildServiceProvider();
 
             provider.GetService<IMemoryCache>();
+
             _cache = new MemoryCache(new MemoryCacheOptions());
             _games = new Dictionary<Guid, string>();
             _cache.CreateEntry(CacheKeys.Games);

@@ -68,34 +68,21 @@ namespace iWorkTech.Orleans.Grains
                 cts.Cancel();
             };
 
-            _connection.On("marketOpened", async () =>
-            {
-                await StartStreaming();
-            });
+            _connection.On("marketOpened", async () => { await StartStreaming(); });
 
             // Do an initial check to see if we can start streaming the stocks
-            var state = await _connection.InvokeAsync<string>("GetMarketState", cancellationToken: cts.Token);
-            if (string.Equals(state, "Open"))
-            {
-                await StartStreaming();
-            }
+            var state = await _connection.InvokeAsync<string>("GetMarketState", cts.Token);
+            if (string.Equals(state, "Open")) await StartStreaming();
 
             // Keep client running until cancel requested.
-            while (!cts.IsCancellationRequested)
-            {
-                await Task.Delay(250, cts.Token);
-            }
+            while (!cts.IsCancellationRequested) await Task.Delay(250, cts.Token);
 
             async Task StartStreaming()
             {
                 var channel = await _connection.StreamAsync<VelocityMessage>("StreamStocks", CancellationToken.None);
                 while (await channel.WaitToReadAsync(cts.Token) && !cts.IsCancellationRequested)
-                {
-                    while (channel.TryRead(out var velocity))
-                    {
-                        Console.WriteLine($"{velocity.Latitude} {velocity.Longitude}");
-                    }
-                }
+                while (channel.TryRead(out var velocity))
+                    Console.WriteLine($"{velocity.Latitude} {velocity.Longitude}");
             }
 
             try

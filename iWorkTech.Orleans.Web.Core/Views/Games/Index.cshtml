@@ -247,7 +247,7 @@
             {{/if}}
         </li>
         {{else}}
-        <i>No games available</i>
+        <li>No games available</li>
         {{/each}}
 
     </ul>
@@ -262,7 +262,7 @@
             <a class="btn btn-default" onclick="oxo.controllers.joinThisGame('{{GameId}}')" href="javascript:void(0);">Join</a>
         </li>
         {{else}}
-        <i>No games available</i>
+        <li>No games available</li>
         {{/each}}
     </ul>
     <a id="startNewBtn" class="btn btn-primary" href="javascript:void(0);" onclick="oxo.controllers.createGame();">Start a new Game</a>
