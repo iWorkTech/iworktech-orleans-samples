@@ -8,6 +8,7 @@ using Orleans;
 
 namespace iWorkTech.Orleans.Grains
 {
+    /// <inheritdoc />
     /// <summary>
     ///     Represents an individual player that may or may not be in a game at any point in time
     /// </summary>
@@ -111,10 +112,15 @@ namespace iWorkTech.Orleans.Grains
 
             // manage running total
 
-            if (outcome == GameOutcome.Win)
-                _wins++;
-            if (outcome == GameOutcome.Lose)
-                _loses++;
+            switch (outcome)
+            {
+                case GameOutcome.Win:
+                    _wins++;
+                    break;
+                case GameOutcome.Lose:
+                    _loses++;
+                    break;
+            }
 
             return Task.CompletedTask;
         }

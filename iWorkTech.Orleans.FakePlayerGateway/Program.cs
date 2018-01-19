@@ -75,27 +75,28 @@ namespace iWorkTech.Orleans.FakePlayerGateway
 
         private static Task DoClientWork(IClusterClient client)
         {
-            var nGames = 10; // number of games to simulate
-            var nPlayersPerGame = 4; // number of players in each game
+            var games = 10; // number of games to simulate
+            var playersPerGame = 4; // number of players in each game
             var sendInterval = TimeSpan.FromSeconds(2); // interval for sending updates
-            var nIterations = 100;
+            var iterations = 100;
 
             // Precreate base heartbeat data objects for each of the games.
             // We'll modify them before every time before sending.
-            var heartbeats = new HeartbeatData[nGames];
-            for (var i = 0; i < nGames; i++)
+            var heartbeats = new HeartbeatData[games];
+            for (var i = 0; i < games; i++)
             {
                 heartbeats[i] = new HeartbeatData {Game = Guid.NewGuid()};
-                for (var j = 0; j < nPlayersPerGame; j++)
-                    heartbeats[i].Status.Players.Add(GetPlayerId(i * nPlayersPerGame + j));
+                for (var j = 0; j < playersPerGame; j++)
+                    heartbeats[i].Status.Players.Add(GetPlayerId(i * playersPerGame + j));
             }
 
             var iteration = 0;
             var presence =
-                client.GetGrain<IPresenceGrain>(0); // PresenceGrain is a StatelessWorker, so we use a single grain ID for auto-scale
+                client.GetGrain<IPresenceGrain>(
+                    0); // PresenceGrain is a StatelessWorker, so we use a single grain ID for auto-scale
             var promises = new List<Task>();
 
-            while (iteration++ < nIterations)
+            while (iteration++ < iterations)
             {
                 Console.WriteLine("Sending heartbeat series #{0}", iteration);
 
@@ -103,15 +104,18 @@ namespace iWorkTech.Orleans.FakePlayerGateway
 
                 try
                 {
-                    for (var i = 0; i < nGames; i++)
+                    for (var i = 0; i < games; i++)
                     {
                         heartbeats[i].Status.Score =
                             string.Format("{0}:{1}", iteration,
                                 iteration > 5 ? iteration - 5 : 0); // Simultate a meaningful game score
 
-                        // We serialize the HeartbeatData object to a byte[] only to simulate the real life scenario where data comes in
-                        // as a binary blob and requires an initial processing before it can be routed to the proper destination.
-                        // We could have sent the HeartbeatData object directly to the game grain because we know the game ID.
+                        // We serialize the HeartbeatData object to a byte[] 
+                        // only to simulate the real life scenario where data comes in
+                        // as a binary blob and requires an initial processing before it 
+                        // can be routed to the proper destination.
+                        // We could have sent the HeartbeatData object directly to the 
+                        // game grain because we know the game ID.
                         // For the sake of simulation we just pretend we don't.
                         var t = presence.Heartbeat(HeartbeatDataDotNetSerializer.Serialize(heartbeats[i]));
 
@@ -139,7 +143,8 @@ namespace iWorkTech.Orleans.FakePlayerGateway
         /// </summary>
         private static Guid GetPlayerId(int playerIndex)
         {
-            // For convenience, we generate a set of predefined subsequent GUIDs for players using this one as a base.
+            // For convenience, we generate a set of predefined subsequent GUIDs for players 
+            // using this one as a base.
             var playerGuid = new Guid("{2349992C-860A-4EDA-9590-000000000000}").ToByteArray();
             playerGuid[15] = (byte) (playerGuid[15] + playerIndex);
             return new Guid(playerGuid);

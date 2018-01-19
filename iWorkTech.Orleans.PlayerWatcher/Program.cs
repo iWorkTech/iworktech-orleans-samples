@@ -91,7 +91,7 @@ namespace iWorkTech.Orleans.PlayerWatcher
                     }
                     catch (Exception exc)
                     {
-                        Console.WriteLine("Exception: ", exc.GetBaseException());
+                        Console.WriteLine("Exception: {0}", exc.GetBaseException().Message);
                     }
                 }
 
@@ -106,7 +106,7 @@ namespace iWorkTech.Orleans.PlayerWatcher
             }
             catch (Exception exc)
             {
-                Console.WriteLine("Unexpected Error: {0}", exc.GetBaseException());
+                Console.WriteLine("Unexpected Error: {0}", exc.GetBaseException().Message);
                 throw;
             }
         }
