@@ -11,15 +11,20 @@ namespace iWorkTech.Orleans.Interfaces
     /// </summary>
     public interface IPlayerGrain : IGrainWithGuidKey
     {
-        Task JoinGame(IGameGrain game);
-        Task LeaveGame(IGameGrain game);
-        Task<IGameGrain> GetCurrentGame();
-        Task<PairingSummary[]> GetAvailableGames();
-        Task<List<GameSummary>> GetGameSummaries();
         Task<Guid> CreateGame();
-        Task<GameState> JoinGame(Guid gameId);
-        Task LeaveGame(Guid gameId, GameOutcome outcome);
         Task SetUsername(string username);
         Task<string> GetUsername();
+
+        Task JoinGame(IGameGrain game);
+        Task<GameState> JoinGame(Guid gameId);
+
+        Task LeaveGame(IGameGrain game);
+        Task LeaveGame(Guid gameId, GameOutcome outcome);
+
+        Task<IGameGrain> GetCurrentGame();
+
+        Task<PairingSummary[]> GetAvailableGames();
+        Task<List<GameSummary>> GetGameSummaries();
+
     }
 }

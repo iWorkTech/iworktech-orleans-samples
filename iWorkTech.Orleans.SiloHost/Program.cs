@@ -26,6 +26,10 @@ namespace iWorkTech.Orleans.SiloHost
                 Console.ReadLine();
 
                 await host.StopAsync();
+                if (host.Stopped.IsCompleted)
+                {
+                    host.Dispose();
+                }
 
                 return 0;
             }
