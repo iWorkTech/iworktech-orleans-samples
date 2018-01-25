@@ -6,10 +6,10 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Common" Version="2.1.0-preview1-27884" />
-    <PackageReference Include="Microsoft.Orleans.Core" Version="2.0.0-ci.20180116.5" />
-    <PackageReference Include="Microsoft.Orleans.Core.Abstractions" Version="2.0.0-ci.20180116.5" />
-    <PackageReference Include="Microsoft.Orleans.OrleansCodeGenerator" Version="2.0.0-ci.20180116.5" />
-    <PackageReference Include="Microsoft.Orleans.OrleansCodeGenerator.Build" Version="2.0.0-ci.20180116.5" />
+    <PackageReference Include="Microsoft.Orleans.Core" Version="2.0.0-ci.20180124.2" />
+    <PackageReference Include="Microsoft.Orleans.Core.Abstractions" Version="2.0.0-ci.20180124.2" />
+    <PackageReference Include="Microsoft.Orleans.OrleansCodeGenerator" Version="2.0.0-ci.20180124.2" />
+    <PackageReference Include="Microsoft.Orleans.OrleansCodeGenerator.Build" Version="2.0.0-ci.20180124.2" />
   </ItemGroup>
 
   <ItemGroup>

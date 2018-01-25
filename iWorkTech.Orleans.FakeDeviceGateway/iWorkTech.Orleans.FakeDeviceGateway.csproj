@@ -9,15 +9,15 @@
     <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="2.1.0-preview1-27884" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client.Core" Version="2.1.0-preview1-27884" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Common" Version="2.1.0-preview1-27884" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="2.1.0-preview1-28099" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="2.1.0-preview1-28099" />
-    <PackageReference Include="Microsoft.Orleans.Client" Version="2.0.0-ci.20180116.5" />
-    <PackageReference Include="Microsoft.Orleans.Core" Version="2.0.0-ci.20180116.5" />
-    <PackageReference Include="Microsoft.Orleans.Core.Abstractions" Version="2.0.0-ci.20180116.5" />
-    <PackageReference Include="Microsoft.Orleans.OrleansCodeGenerator" Version="2.0.0-ci.20180116.5" />
-    <PackageReference Include="Microsoft.Orleans.OrleansCodeGenerator.Build" Version="2.0.0-ci.20180116.5" />
-    <PackageReference Include="Microsoft.Orleans.OrleansProviders" Version="2.0.0-ci.20180116.5" />
-    <PackageReference Include="Microsoft.Orleans.OrleansRuntime" Version="2.0.0-ci.20180116.5" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="2.1.0-preview2-28169" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="2.1.0-preview2-28169" />
+    <PackageReference Include="Microsoft.Orleans.Client" Version="2.0.0-ci.20180124.2" />
+    <PackageReference Include="Microsoft.Orleans.Core" Version="2.0.0-ci.20180124.2" />
+    <PackageReference Include="Microsoft.Orleans.Core.Abstractions" Version="2.0.0-ci.20180124.2" />
+    <PackageReference Include="Microsoft.Orleans.OrleansCodeGenerator" Version="2.0.0-ci.20180124.2" />
+    <PackageReference Include="Microsoft.Orleans.OrleansCodeGenerator.Build" Version="2.0.0-ci.20180124.2" />
+    <PackageReference Include="Microsoft.Orleans.OrleansProviders" Version="2.0.0-ci.20180124.2" />
+    <PackageReference Include="Microsoft.Orleans.OrleansRuntime" Version="2.0.0-ci.20180124.2" />
     <PackageReference Include="SignalR.Orleans" Version="1.0.0-preview-32" />
   </ItemGroup>
 

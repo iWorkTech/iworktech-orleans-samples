@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using iWorkTech.Orleans.Common;
 using iWorkTech.Orleans.Interfaces;
 using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.AspNetCore.Sockets;
 using Orleans;
 using Orleans.Concurrency;
 
@@ -33,10 +34,10 @@ namespace iWorkTech.Orleans.Grains
             RegisterTimer(FlushQueue, null, TimeSpan.FromMilliseconds(100), TimeSpan.FromMilliseconds(100));
 
             _connection = new HubConnectionBuilder()
-                //.WithUrl("http://localhost:60299/location")
-                //.WithConsoleLogger()
+                .WithUrl("http://localhost:60299/location")
+                .WithConsoleLogger()
                 .WithMessagePackProtocol()
-                //.WithTransport(TransportType.WebSockets)
+                .WithTransport(TransportType.WebSockets)
                 .Build();
 
             await _connection.StartAsync();
