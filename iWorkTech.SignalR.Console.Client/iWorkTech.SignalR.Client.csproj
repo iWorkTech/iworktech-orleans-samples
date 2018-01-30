@@ -7,5 +7,6 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="2.1.0-preview1-27884" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="2.1.0-preview1-28124" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="2.1.0-preview2-28169" />
   </ItemGroup>
 </Project>

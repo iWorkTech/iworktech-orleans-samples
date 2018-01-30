@@ -10,6 +10,11 @@
     <PackageReference Include="Microsoft.Orleans.OrleansCodeGenerator" Version="2.0.0-ci.20180119.1" />
     <PackageReference Include="Microsoft.Orleans.OrleansCodeGenerator.Build" Version="2.0.0-ci.20180119.1" />
     <PackageReference Include="Microsoft.Orleans.OrleansProviders" Version="2.0.0-ci.20180119.1" />
+    <PackageReference Include="Microsoft.Orleans.Core" Version="2.0.0-ci.20180124.2" />
+    <PackageReference Include="Microsoft.Orleans.Core.Abstractions" Version="2.0.0-ci.20180124.2" />
+    <PackageReference Include="Microsoft.Orleans.OrleansCodeGenerator" Version="2.0.0-ci.20180124.2" />
+    <PackageReference Include="Microsoft.Orleans.OrleansCodeGenerator.Build" Version="2.0.0-ci.20180124.2" />
+    <PackageReference Include="Microsoft.Orleans.OrleansProviders" Version="2.0.0-ci.20180124.2" />
   </ItemGroup>
 
 </Project>

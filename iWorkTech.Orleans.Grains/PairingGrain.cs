@@ -23,7 +23,7 @@ namespace iWorkTech.Orleans.Grains
         public Task AddGame(Guid gameId, string name)
         {
             _games.Add(gameId, name);
-            _cache.Set(CacheKeys.Games, _games);
+            _cache.Set(CacheKeys.GAMES, _games);
             return Task.CompletedTask;
         }
 
@@ -35,7 +35,7 @@ namespace iWorkTech.Orleans.Grains
 
         public Task<PairingSummary[]> GetGames()
         {
-            _cache.TryGetValue(CacheKeys.Games, out Dictionary<Guid, string> games);
+            _cache.TryGetValue(CacheKeys.GAMES, out Dictionary<Guid, string> games);
             return Task.FromResult(games.Select(x => new PairingSummary {GameId = x.Key, Name = x.Value}).ToArray());
         }
 
@@ -49,7 +49,7 @@ namespace iWorkTech.Orleans.Grains
 
             _cache = new MemoryCache(new MemoryCacheOptions());
             _games = new Dictionary<Guid, string>();
-            _cache.CreateEntry(CacheKeys.Games);
+            _cache.CreateEntry(CacheKeys.GAMES);
             return base.OnActivateAsync();
         }
     }

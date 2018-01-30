@@ -14,7 +14,7 @@ namespace iWorkTech.Orleans.Grains
 
         public async Task BecomeConsumer(Guid streamId, string streamNamespace, string providerToUse)
         {
-            Console.WriteLine("BecomeConsumer");
+            Console.WriteLine("StreamingInlineConsumerGrain - BecomeConsumer " + IdentityString);
             var streamProvider = GetStreamProvider(providerToUse);
             _consumer = streamProvider.GetStream<int>(streamId, streamNamespace);
             _consumerHandle = await _consumer.SubscribeAsync(OnNextAsync, OnErrorAsync, OnCompletedAsync);
@@ -22,7 +22,7 @@ namespace iWorkTech.Orleans.Grains
 
         public async Task StopConsuming()
         {
-            Console.WriteLine("StopConsuming");
+            Console.WriteLine("StreamingInlineConsumerGrain - StopConsuming " + IdentityString);
             if (_consumerHandle != null)
             {
                 await _consumerHandle.UnsubscribeAsync();
@@ -38,8 +38,7 @@ namespace iWorkTech.Orleans.Grains
 
         public override Task OnActivateAsync()
         {
-            Console.WriteLine("SampleStreaming_InlineConsumerGrain " + IdentityString);
-            Console.WriteLine("OnActivateAsync");
+            Console.WriteLine("StreamingInlineConsumerGrain - OnActivateAsync " + IdentityString);
             NumConsumedItems = 0;
             _consumerHandle = null;
             return Task.CompletedTask;
@@ -47,6 +46,7 @@ namespace iWorkTech.Orleans.Grains
 
         public Task OnNextAsync(int item, StreamSequenceToken token = null)
         {
+            Console.WriteLine("StreamingInlineConsumerGrain - OnNextAsync " + IdentityString);
             Console.WriteLine("OnNextAsync({0}{1})", item, token != null ? token.ToString() : "null");
             NumConsumedItems++;
             return Task.CompletedTask;
@@ -54,19 +54,20 @@ namespace iWorkTech.Orleans.Grains
 
         public Task OnCompletedAsync()
         {
-            Console.WriteLine("OnCompletedAsync()");
+            Console.WriteLine("StreamingInlineConsumerGrain - OnCompletedAsync " + IdentityString);
             return Task.CompletedTask;
         }
 
         public Task OnErrorAsync(Exception ex)
         {
-            Console.WriteLine("OnErrorAsync({0})", ex);
+            Console.WriteLine("StreamingInlineConsumerGrain - OnErrorAsync " + IdentityString);
+            Console.WriteLine("StreamingInlineConsumerGrain - OnErrorAsync {0}" + ex.Message);
             return Task.CompletedTask;
         }
 
         public override Task OnDeactivateAsync()
         {
-            Console.WriteLine("OnDeactivateAsync");
+            Console.WriteLine("StreamingInlineConsumerGrain - OnDeactivateAsync " + IdentityString);
             return Task.CompletedTask;
         }
     }
