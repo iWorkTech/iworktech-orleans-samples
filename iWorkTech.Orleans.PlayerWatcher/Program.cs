@@ -42,8 +42,7 @@ namespace iWorkTech.Orleans.PlayerWatcher
             while (true)
                 try
                 {
-                    var config = ClientConfiguration.LocalhostSilo()
-                        .AddSignalR();
+                    var config = ClientConfiguration.LocalhostSilo();
 
                     client = new ClientBuilder()
                         .UseConfiguration(config)

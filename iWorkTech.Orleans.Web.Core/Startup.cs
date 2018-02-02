@@ -38,13 +38,9 @@ namespace iWorkTech.Orleans.Web.Core
 
             services.AddCors();
 
-            services.AddSignalR();
-            //.AddOrleans();
-
             services.AddSingleton<IGrainFactory>(sp =>
             {
-                var config = ClientConfiguration.LocalhostSilo()
-                    .AddSignalR();
+                var config = ClientConfiguration.LocalhostSilo();
                 var client = new ClientBuilder()
                     .UseConfiguration(config)
                     .ConfigureApplicationParts(parts =>

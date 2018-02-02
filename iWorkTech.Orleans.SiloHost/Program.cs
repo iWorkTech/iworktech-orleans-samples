@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using iWorkTech.Orleans.Grains;
 using iWorkTech.Orleans.Interfaces;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Orleans;
 using Orleans.Hosting;
@@ -27,9 +26,7 @@ namespace iWorkTech.Orleans.SiloHost
 
                 await host.StopAsync();
                 if (host.Stopped.IsCompleted)
-                {
                     host.Dispose();
-                }
 
                 return 0;
             }
@@ -43,12 +40,11 @@ namespace iWorkTech.Orleans.SiloHost
         private static async Task<ISiloHost> StartSilo()
         {
             // define the cluster configuration
-            var siloConfig = ClusterConfiguration.LocalhostPrimarySilo()
-                .AddSignalR();
+
+            var siloConfig = ClusterConfiguration.LocalhostPrimarySilo();
             siloConfig.AddMemoryStorageProvider();
 
             var silo = new SiloHostBuilder()
-                .UseConfiguration(siloConfig)
                 .ConfigureApplicationParts(parts =>
                     parts.AddApplicationPart(typeof(IPlayerGrain).Assembly).WithReferences())
                 .ConfigureApplicationParts(parts =>

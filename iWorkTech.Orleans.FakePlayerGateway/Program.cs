@@ -45,12 +45,10 @@ namespace iWorkTech.Orleans.FakePlayerGateway
             while (true)
                 try
                 {
-                    var config = ClientConfiguration.LocalhostSilo()
-                        .AddSignalR();
+                    var config = ClientConfiguration.LocalhostSilo();
 
                     client = new ClientBuilder()
                         .UseConfiguration(config)
-                        //.UseSignalR()
                         .ConfigureApplicationParts(parts =>
                             parts.AddApplicationPart(typeof(IChatGrain).Assembly).WithReferences())
                         .ConfigureLogging(logging => logging.AddConsole())
