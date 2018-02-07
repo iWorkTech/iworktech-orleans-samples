@@ -42,8 +42,7 @@ namespace iWorkTech.Orleans.PlayerWatcher
             while (true)
                 try
                 {
-                    var config = ClientConfiguration.LocalhostSilo()
-                        .AddSignalR();
+                    var config = ClientConfiguration.LocalhostSilo();
 
                     client = new ClientBuilder()
                         .UseConfiguration(config)
@@ -70,7 +69,7 @@ namespace iWorkTech.Orleans.PlayerWatcher
             return client;
         }
 
-        private static async Task DoClientWork(IClusterClient client)
+        private static async Task DoClientWork(IGrainFactory client)
         {
             try
             {

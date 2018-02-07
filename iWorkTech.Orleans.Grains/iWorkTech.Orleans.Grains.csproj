@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MailKit" Version="2.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="2.1.0-preview1-27884" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client.Core" Version="2.1.0-preview1-27884" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Common" Version="2.1.0-preview1-27884" />
@@ -12,15 +13,25 @@
     <PackageReference Include="Microsoft.AspNetCore.Sockets.Client.Http" Version="2.1.0-preview1-27884" />
     <PackageReference Include="Microsoft.AspNetCore.Sockets.Common.Http" Version="2.1.0-preview1-27884" />
     <PackageReference Include="Microsoft.AspNetCore.Sockets.Http" Version="2.1.0-preview1-27884" />
-    <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="2.1.0-preview2-28169" />
-    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="2.1.0-preview2-28169" />
-    <PackageReference Include="Microsoft.Orleans.Core" Version="2.0.0-ci.20180124.2" />
-    <PackageReference Include="Microsoft.Orleans.Core.Abstractions" Version="2.0.0-ci.20180124.2" />
-    <PackageReference Include="Microsoft.Orleans.OrleansCodeGenerator" Version="2.0.0-ci.20180124.2" />
-    <PackageReference Include="Microsoft.Orleans.OrleansCodeGenerator.Build" Version="2.0.0-ci.20180124.2" />
-    <PackageReference Include="Microsoft.Orleans.OrleansProviders" Version="2.0.0-ci.20180124.2" />
-    <PackageReference Include="Microsoft.Orleans.OrleansRuntime" Version="2.0.0-ci.20180124.2" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="2.1.0-preview1-28124" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="2.1.0-preview1-28124" />
+    <PackageReference Include="Microsoft.Orleans.Core" Version="2.0.0-ci.20180119.1" />
+    <PackageReference Include="Microsoft.Orleans.Core.Abstractions" Version="2.0.0-ci.20180119.1" />
+    <PackageReference Include="Microsoft.Orleans.OrleansCodeGenerator" Version="2.0.0-ci.20180119.1" />
+    <PackageReference Include="Microsoft.Orleans.OrleansProviders" Version="2.0.0-ci.20180119.1" />
+    <PackageReference Include="Microsoft.Orleans.OrleansRuntime" Version="2.0.0-ci.20180119.1" />
+    <PackageReference Include="MimeKit" Version="2.0.1" />
+    <PackageReference Include="NETStandard.Library" Version="2.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="2.1.0-preview2-30015" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="2.1.0-preview2-30015" />
+    <PackageReference Include="Microsoft.Orleans.Core" Version="2.0.0-ci.20180201.11" />
+    <PackageReference Include="Microsoft.Orleans.Core.Abstractions" Version="2.0.0-ci.20180201.11" />
+    <PackageReference Include="Microsoft.Orleans.OrleansCodeGenerator" Version="2.0.0-ci.20180201.11" />
+    <PackageReference Include="Microsoft.Orleans.OrleansProviders" Version="2.0.0-ci.20180201.11" />
+    <PackageReference Include="Microsoft.Orleans.OrleansRuntime" Version="2.0.0-ci.20180201.11" />
     <PackageReference Include="SignalR.Orleans" Version="1.0.0-preview-32" />
+    <PackageReference Include="System.Reactive.Linq" Version="4.0.0-preview00001" />
+    <PackageReference Include="WindowsAzure.Storage" Version="8.7.0" />
   </ItemGroup>
 
   <ItemGroup>

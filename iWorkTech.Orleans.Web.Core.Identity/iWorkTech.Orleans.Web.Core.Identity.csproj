@@ -20,6 +20,24 @@
     <PackageReference Include="Microsoft.Orleans.OrleansRuntime" Version="2.0.0-ci.20180124.2" />
     <PackageReference Include="Microsoft.Orleans.Server" Version="2.0.0-ci.20180124.2" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.0-preview2-28169" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Cors" Version="2.1.0-preview1-28124" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.1.0-preview1-28124" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.Orleans.Client" Version="2.0.0-ci.20180119.1" />
+    <PackageReference Include="Microsoft.Orleans.Core" Version="2.0.0-ci.20180119.1" />
+    <PackageReference Include="Microsoft.Orleans.Core.Abstractions" Version="2.0.0-ci.20180119.1" />
+    <PackageReference Include="Microsoft.Orleans.OrleansCodeGenerator" Version="2.0.0-ci.20180119.1" />
+    <PackageReference Include="Microsoft.Orleans.OrleansRuntime" Version="2.0.0-ci.20180119.1" />
+    <PackageReference Include="Microsoft.Orleans.Server" Version="2.0.0-ci.20180119.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.0-preview1-28124" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Cors" Version="2.1.0-preview2-30015" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.1.0-preview2-30015" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.Orleans.Client" Version="2.0.0-ci.20180201.11" />
+    <PackageReference Include="Microsoft.Orleans.Core" Version="2.0.0-ci.20180201.11" />
+    <PackageReference Include="Microsoft.Orleans.Core.Abstractions" Version="2.0.0-ci.20180201.11" />
+    <PackageReference Include="Microsoft.Orleans.OrleansCodeGenerator" Version="2.0.0-ci.20180201.11" />
+    <PackageReference Include="Microsoft.Orleans.OrleansRuntime" Version="2.0.0-ci.20180201.11" />
+    <PackageReference Include="Microsoft.Orleans.Server" Version="2.0.0-ci.20180201.11" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.0-preview2-30015" PrivateAssets="All" />
     <PackageReference Include="SignalR.Orleans" Version="1.0.0-preview-32" />
     <PackageReference Include="System.Buffers.Primitives" Version="0.1.0-e180104-2" />
   </ItemGroup>

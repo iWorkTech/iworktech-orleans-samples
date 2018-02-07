@@ -8,19 +8,31 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Certes" Version="2.0.0-beta-20180128" />
+    <PackageReference Include="IdentityServer4" Version="2.1.1" />
+    <PackageReference Include="IdentityServer4.AspNetIdentity" Version="2.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.1.0-preview1-27000" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting.WindowsServices" Version="2.1.0-preview2-28169" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Cors" Version="2.1.0-preview1-28169" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Cors" Version="2.1.0-preview2-30015" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="2.1.0-preview1-27884" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="2.1.0-preview2-28169" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="2.1.0-preview2-28169" />
-    <PackageReference Include="Microsoft.Orleans.Core" Version="2.0.0-ci.20180124.2" />
-    <PackageReference Include="Microsoft.Orleans.Core.Abstractions" Version="2.0.0-ci.20180124.2" />
-    <PackageReference Include="Microsoft.Orleans.OrleansCodeGenerator" Version="2.0.0-ci.20180124.2" />
-    <PackageReference Include="Microsoft.Orleans.OrleansCodeGenerator.Build" Version="2.0.0-ci.20180124.2" />
-    <PackageReference Include="Microsoft.Orleans.OrleansProviders" Version="2.0.0-ci.20180124.2" />
-    <PackageReference Include="Microsoft.Orleans.OrleansRuntime" Version="2.0.0-ci.20180124.2" />
-    <PackageReference Include="Microsoft.Orleans.Server" Version="2.0.0-ci.20180124.2" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="2.1.0-preview1-28099" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="2.1.0-preview1-28099" />
+    <PackageReference Include="Microsoft.Orleans.Client" Version="2.0.0-ci.20180201.11" />
+    <PackageReference Include="Microsoft.Orleans.Core" Version="2.0.0-ci.20180116.5" />
+    <PackageReference Include="Microsoft.Orleans.Core.Abstractions" Version="2.0.0-ci.20180116.5" />
+    <PackageReference Include="Microsoft.Orleans.OrleansCodeGenerator" Version="2.0.0-ci.20180116.5" />
+    <PackageReference Include="Microsoft.Orleans.OrleansProviders" Version="2.0.0-ci.20180116.5" />
+    <PackageReference Include="Microsoft.Orleans.OrleansRuntime" Version="2.0.0-ci.20180116.5" />
+    <PackageReference Include="Microsoft.Orleans.Server" Version="2.0.0-ci.20180116.5" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="2.1.0-preview2-30015" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="2.1.0-preview2-30015" />
+    <PackageReference Include="Microsoft.Orleans.Core" Version="2.0.0-ci.20180201.11" />
+    <PackageReference Include="Microsoft.Orleans.Core.Abstractions" Version="2.0.0-ci.20180201.11" />
+    <PackageReference Include="Microsoft.Orleans.OrleansCodeGenerator" Version="2.0.0-ci.20180201.11" />
+    <PackageReference Include="Microsoft.Orleans.OrleansProviders" Version="2.0.0-ci.20180201.11" />
+    <PackageReference Include="Microsoft.Orleans.OrleansRuntime" Version="2.0.0-ci.20180201.11" />
+    <PackageReference Include="Microsoft.Orleans.Server" Version="2.0.0-ci.20180201.11" />
     <PackageReference Include="SignalR.Orleans" Version="1.0.0-preview-32" />
     <PackageReference Include="System.Buffers.Primitives" Version="0.1.0-e180104-2" />
   </ItemGroup>
@@ -32,6 +44,10 @@
   <ItemGroup>
     <!-- Files not to publish (note that the 'dist' subfolders are re-added below) -->
     <Content Remove="ClientApp\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\iWorkTech.Orleans.Interfaces\iWorkTech.Orleans.Interfaces.csproj" />
   </ItemGroup>
 
   <Target Name="DebugRunWebpack" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('wwwroot\dist') ">

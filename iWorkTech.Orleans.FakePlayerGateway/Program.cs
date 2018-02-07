@@ -45,12 +45,10 @@ namespace iWorkTech.Orleans.FakePlayerGateway
             while (true)
                 try
                 {
-                    var config = ClientConfiguration.LocalhostSilo()
-                        .AddSignalR();
+                    var config = ClientConfiguration.LocalhostSilo();
 
                     client = new ClientBuilder()
                         .UseConfiguration(config)
-                        //.UseSignalR()
                         .ConfigureApplicationParts(parts =>
                             parts.AddApplicationPart(typeof(IChatGrain).Assembly).WithReferences())
                         .ConfigureLogging(logging => logging.AddConsole())
@@ -73,12 +71,12 @@ namespace iWorkTech.Orleans.FakePlayerGateway
             return client;
         }
 
-        private static Task DoClientWork(IClusterClient client)
+        private static Task DoClientWork(IGrainFactory client)
         {
-            var games = 10; // number of games to simulate
-            var playersPerGame = 4; // number of players in each game
+            const int games = 10; // number of games to simulate
+            const int playersPerGame = 4; // number of players in each game
             var sendInterval = TimeSpan.FromSeconds(2); // interval for sending updates
-            var iterations = 100;
+            const int iterations = 100;
 
             // Precreate base heartbeat data objects for each of the games.
             // We'll modify them before every time before sending.
@@ -91,9 +89,8 @@ namespace iWorkTech.Orleans.FakePlayerGateway
             }
 
             var iteration = 0;
-            var presence =
-                client.GetGrain<IPresenceGrain>(
-                    0); // PresenceGrain is a StatelessWorker, so we use a single grain ID for auto-scale
+            var presence = client.GetGrain<IPresenceGrain>(0); 
+            // PresenceGrain is a StatelessWorker, so we use a single grain ID for auto-scale
             var promises = new List<Task>();
 
             while (iteration++ < iterations)
