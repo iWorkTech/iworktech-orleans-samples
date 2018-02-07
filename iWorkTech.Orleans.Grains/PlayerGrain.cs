@@ -85,8 +85,7 @@ namespace iWorkTech.Orleans.Grains
                 throw;
             }
         }
-
-
+        
         // join a game that is awaiting players
         public async Task<GameState> JoinGame(Guid gameId)
         {
@@ -100,8 +99,7 @@ namespace iWorkTech.Orleans.Grains
 
             return state;
         }
-
-
+        
         // leave game when it is over
         public Task LeaveGame(Guid gameId, GameOutcome outcome)
         {
@@ -161,8 +159,7 @@ namespace iWorkTech.Orleans.Grains
 
             return Task.CompletedTask;
         }
-
-
+        
         private static string AddOrdinalSuffix(string number)
         {
             var n = int.Parse(number);

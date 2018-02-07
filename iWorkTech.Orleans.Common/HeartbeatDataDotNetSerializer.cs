@@ -11,14 +11,14 @@ namespace iWorkTech.Orleans.Common
     /// </summary>
     public static class HeartbeatDataDotNetSerializer
     {
-        private static readonly BinaryFormatter formatter = new BinaryFormatter();
+        private static readonly BinaryFormatter Formatter = new BinaryFormatter();
 
         public static byte[] Serialize(object o)
         {
             byte[] bytes;
             using (var memoryStream = new MemoryStream())
             {
-                formatter.Serialize(memoryStream, o);
+                Formatter.Serialize(memoryStream, o);
                 memoryStream.Flush();
                 bytes = memoryStream.ToArray();
             }
@@ -30,7 +30,7 @@ namespace iWorkTech.Orleans.Common
         {
             using (var memoryStream = new MemoryStream(data))
             {
-                return (HeartbeatData) formatter.Deserialize(memoryStream);
+                return (HeartbeatData) Formatter.Deserialize(memoryStream);
             }
         }
     }

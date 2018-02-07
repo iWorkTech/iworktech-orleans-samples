@@ -6,6 +6,7 @@ using Orleans.Concurrency;
 
 namespace iWorkTech.Orleans.Grains
 {
+    /// <inheritdoc />
     /// <summary>
     ///     Stateless grain that decodes binary blobs and routes then to 
     ///     the appropriate game grains based on the blob content.
