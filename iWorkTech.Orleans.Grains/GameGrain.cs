@@ -13,15 +13,15 @@ namespace iWorkTech.Orleans.Grains
     ///     Notifies player grains about their players joining and leaving the game.
     ///     Updates subscribed observers about the progress of the game
     /// </summary>
-    public class GameGrain : Grain, IGameGrain
+    public class GameGrain : Grain, IGameGrain, IGrainState
     {
         private HashSet<Guid> _players;
         private GameStatus _status;
         private ObserverSubscriptionManager<IGameObserver> _subscribers;
-        private Guid gameId;
-        private int indexNextPlayerToMove;
-        private string name;
-        private int[,] theBoard;
+        private Guid _gameId;
+        private int _indexNextPlayerToMove;
+        private string _name;
+        private int[,] _theBoard;
 
         // list of players in the current game
         // for simplicity, player 0 always plays an "O" and player 1 plays an "X"
@@ -118,8 +118,14 @@ namespace iWorkTech.Orleans.Grains
                 case GameState.AwaitingPlayers when ListOfPlayers.Count == 2:
                     // a new game is starting
                     GameState = GameState.InPlay;
-                    indexNextPlayerToMove = new Random().Next(0, 1); // random as to who has the first move
+                    _indexNextPlayerToMove = new Random().Next(0, 1); // random as to who has the first move
                     break;
+                case GameState.InPlay:
+                    break;
+                case GameState.Finished:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
 
             // let user know if game is ready or not
@@ -135,28 +141,28 @@ namespace iWorkTech.Orleans.Grains
 
             if (ListOfPlayers.IndexOf(move.PlayerId) < 0)
                 throw new ArgumentException("No such playerid for this game", nameof(move));
-            if (move.PlayerId != ListOfPlayers[indexNextPlayerToMove])
+            if (move.PlayerId != ListOfPlayers[_indexNextPlayerToMove])
                 throw new ArgumentException("The wrong player tried to make a move", nameof(move));
 
             if (move.X < 0 || move.X > 2 || move.Y < 0 || move.Y > 2)
                 throw new ArgumentException("Bad co-ordinates for a move", nameof(move));
-            if (theBoard[move.X, move.Y] != -1) throw new ArgumentException("That square is not empty", nameof(move));
+            if (_theBoard[move.X, move.Y] != -1) throw new ArgumentException("That square is not empty", nameof(move));
 
             // record move
             ListOfMoves.Add(move);
-            theBoard[move.X, move.Y] = indexNextPlayerToMove;
+            _theBoard[move.X, move.Y] = _indexNextPlayerToMove;
 
             // check for a winning move
             var win = false;
             for (var i = 0; i < 3 && !win; i++)
-                win = IsWinningLine(theBoard[i, 0], theBoard[i, 1], theBoard[i, 2]);
+                win = IsWinningLine(_theBoard[i, 0], _theBoard[i, 1], _theBoard[i, 2]);
             if (!win)
                 for (var i = 0; i < 3 && !win; i++)
-                    win = IsWinningLine(theBoard[0, i], theBoard[1, i], theBoard[2, i]);
+                    win = IsWinningLine(_theBoard[0, i], _theBoard[1, i], _theBoard[2, i]);
             if (!win)
-                win = IsWinningLine(theBoard[0, 0], theBoard[1, 1], theBoard[2, 2]);
+                win = IsWinningLine(_theBoard[0, 0], _theBoard[1, 1], _theBoard[2, 2]);
             if (!win)
-                win = IsWinningLine(theBoard[0, 2], theBoard[1, 1], theBoard[2, 0]);
+                win = IsWinningLine(_theBoard[0, 2], _theBoard[1, 1], _theBoard[2, 0]);
 
             // check for draw
 
@@ -169,25 +175,25 @@ namespace iWorkTech.Orleans.Grains
                 GameState = GameState.Finished;
                 if (win)
                 {
-                    WinnerId = ListOfPlayers[indexNextPlayerToMove];
-                    LoserId = ListOfPlayers[(indexNextPlayerToMove + 1) % 2];
+                    WinnerId = ListOfPlayers[_indexNextPlayerToMove];
+                    LoserId = ListOfPlayers[(_indexNextPlayerToMove + 1) % 2];
                 }
 
                 // collect tasks up, so we await both notifications at the same time
                 var promises = new List<Task>();
                 // inform this player of outcome
-                var playerGrain = GrainFactory.GetGrain<IPlayerGrain>(ListOfPlayers[indexNextPlayerToMove]);
+                var playerGrain = GrainFactory.GetGrain<IPlayerGrain>(ListOfPlayers[_indexNextPlayerToMove]);
                 promises.Add(playerGrain.LeaveGame(this.GetPrimaryKey(), win ? GameOutcome.Win : GameOutcome.Draw));
 
                 // inform other player of outcome
-                playerGrain = GrainFactory.GetGrain<IPlayerGrain>(ListOfPlayers[(indexNextPlayerToMove + 1) % 2]);
+                playerGrain = GrainFactory.GetGrain<IPlayerGrain>(ListOfPlayers[(_indexNextPlayerToMove + 1) % 2]);
                 promises.Add(playerGrain.LeaveGame(this.GetPrimaryKey(), win ? GameOutcome.Lose : GameOutcome.Draw));
                 await Task.WhenAll(promises);
                 return GameState;
             }
 
             // if game hasnt ended, prepare for next players move
-            indexNextPlayerToMove = (indexNextPlayerToMove + 1) % 2;
+            _indexNextPlayerToMove = (_indexNextPlayerToMove + 1) % 2;
             return GameState;
         }
 
@@ -211,18 +217,18 @@ namespace iWorkTech.Orleans.Grains
             {
                 NumMoves = ListOfMoves.Count,
                 State = GameState,
-                YourMove = GameState == GameState.InPlay && player == ListOfPlayers[indexNextPlayerToMove],
+                YourMove = GameState == GameState.InPlay && player == ListOfPlayers[_indexNextPlayerToMove],
                 NumPlayers = ListOfPlayers.Count,
                 GameId = this.GetPrimaryKey(),
                 Usernames = promises.Select(x => x.Result).ToArray(),
-                Name = name,
+                Name = _name,
                 GameStarter = ListOfPlayers.FirstOrDefault() == player
             };
         }
 
         public Task SetName(string playerName)
         {
-            name = playerName;
+            _name = playerName;
             return Task.CompletedTask;
         }
 
@@ -234,14 +240,14 @@ namespace iWorkTech.Orleans.Grains
             // make sure newly formed game is in correct state 
             ListOfPlayers = new List<Guid>();
             ListOfMoves = new List<GameMove>();
-            indexNextPlayerToMove = -1; // safety default - is set when game begins to 0 or 1
-            theBoard = new int[3, 3] {{-1, -1, -1}, {-1, -1, -1}, {-1, -1, -1}}; // -1 is empty
+            _indexNextPlayerToMove = -1; // safety default - is set when game begins to 0 or 1
+            _theBoard = new int[3, 3] {{-1, -1, -1}, {-1, -1, -1}, {-1, -1, -1}}; // -1 is empty
 
             GameState = GameState.AwaitingPlayers;
             WinnerId = Guid.Empty;
             LoserId = Guid.Empty;
 
-            gameId = this.GetPrimaryKey();
+            _gameId = this.GetPrimaryKey();
 
             return Task.CompletedTask;
         }
@@ -266,5 +272,8 @@ namespace iWorkTech.Orleans.Grains
 
             return false;
         }
+
+        public object State { get; set; }
+        public string ETag { get; set; }
     }
 }

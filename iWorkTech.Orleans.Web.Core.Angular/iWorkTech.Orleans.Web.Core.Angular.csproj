@@ -10,6 +10,8 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.1.0-preview1-27000" />
+    <PackageReference Include="Microsoft.AspNetCore.Hosting.WindowsServices" Version="2.1.0-preview2-28169" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Cors" Version="2.1.0-preview1-28169" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Cors" Version="2.1.0-preview1-28124" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="2.1.0-preview1-27884" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="2.1.0-preview1-28124" />
@@ -33,6 +35,7 @@
     <PackageReference Include="Microsoft.Orleans.OrleansRuntime" Version="2.0.0-ci.20180201.11" />
     <PackageReference Include="Microsoft.Orleans.Server" Version="2.0.0-ci.20180201.11" />
     <PackageReference Include="SignalR.Orleans" Version="1.0.0-preview-32" />
+    <PackageReference Include="System.Buffers.Primitives" Version="0.1.0-e180104-2" />
   </ItemGroup>
 
   <ItemGroup>
